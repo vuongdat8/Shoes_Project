@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Nền trắng (hoặc transparent tuỳ thích) -->
+    <solid android:color="@android:color/white"/>
+
+    <!-- Bo góc 8 dp cho mềm mại -->
+    <corners android:radius="8dp"/>
+
+    <!-- Viền dày 3 dp, màu primary của app -->
+    <stroke
+        android:width="3dp"
+        android:color="@color/my_primary"/>
+</shape>
