@@ -40,8 +40,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class LoginActivity extends AppCompatActivity {
-
     /* ---------- View & DB ---------- */
+
     private EditText etEmail, etPassword;
     private CheckBox cbRemember;
     private UserDao  userDao;
