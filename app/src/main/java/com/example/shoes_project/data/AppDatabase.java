@@ -1,6 +1,7 @@
 package com.example.shoes_project.data;
 
 import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -9,18 +10,19 @@ import com.example.shoes_project.model.Product;
 import com.example.shoes_project.model.User;
 
 @Database(
-        entities = {Product.class,  User.class},
-        version = 1,
+        entities = {Product.class, User.class},
+        version = 2,               // ⬆️ Tăng version mỗi khi đổi schema
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
 
-    // DAOs từ database đầu tiên
+    /* ---------- DAO ---------- */
     public abstract ProductDao productDao();
+    public abstract UserDao    userDao();
 
-    // DAO từ database thứ hai
-    public abstract UserDao userDao();
+    /* ---------- Singleton ---------- */
     private static volatile AppDatabase INSTANCE;
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -28,9 +30,10 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                                     context.getApplicationContext(),
                                     AppDatabase.class,
-                                    "app_database"
+                                    "app_db"
                             )
-                            .allowMainThreadQueries() // Chỉ nên dùng cho testing
+                            .fallbackToDestructiveMigration()  // ⚠ Xoá DB cũ khi schema đổi
+                            .allowMainThreadQueries()          // Chỉ dùng khi testing
                             .build();
                 }
             }
@@ -38,60 +41,3 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 }
-
-
-
-//package com.example.shoes_project.data;
-//
-//import android.content.Context;
-//
-//import androidx.annotation.NonNull;
-//import androidx.room.Database;
-//import androidx.room.Room;
-//import androidx.room.RoomDatabase;
-//import androidx.sqlite.db.SupportSQLiteDatabase;
-//
-//import java.util.concurrent.Executors;
-//
-//@Database(entities = {User.class}, version = 1, exportSchema = false)
-//public abstract class AppDatabase extends RoomDatabase {
-//
-//    public abstract UserDao userDao();
-//
-//    private static volatile AppDatabase INSTANCE;
-//
-//    /**  👇 Chỉnh ở đây  */
-//    public static AppDatabase getInstance(Context context) {
-//        if (INSTANCE == null) {
-//            synchronized (AppDatabase.class) {
-//                if (INSTANCE == null) {
-//
-//                    /* 1) XÓA TOÀN BỘ FILE app_db MỖI KHI ỨNG DỤNG CHẠY  */
-//                    // Nếu muốn GIỮ schema và chỉ xoá dữ liệu, comment dòng này.
-//                    context.deleteDatabase("app_db");
-//
-//                    /* 2) TẠO LẠI DATABASE  */
-//                    INSTANCE = Room.databaseBuilder(
-//                                    context.getApplicationContext(),
-//                                    AppDatabase.class,
-//                                    "app_db")
-//                            /* Nếu chỉ muốn xoá bản ghi chứ không xoá file, bỏ đoạn deleteDatabase ở trên
-//                               và dùng callback dưới đây  */
-//                            .addCallback(new Callback() {
-//                                @Override
-//                                public void onOpen(@NonNull SupportSQLiteDatabase db) {
-//                                    super.onOpen(db);
-//                                    // Chạy nền để tránh block UI
-//                                    Executors.newSingleThreadExecutor().execute(() -> {
-//                                        // Xoá tất cả bảng, giữ schema
-//                                        INSTANCE.clearAllTables();
-//                                    });
-//                                }
-//                            })
-//                            .build();
-//                }
-//            }
-//        }
-//        return INSTANCE;
-//    }
-//}

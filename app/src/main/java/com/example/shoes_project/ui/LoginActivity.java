@@ -68,7 +68,12 @@ public class LoginActivity extends AppCompatActivity {
         userDao = AppDatabase.getInstance(this).userDao();
         executor.execute(() -> {
             if (userDao.countUsers() == 0) {
-                userDao.insert(new User("Nguyen Duc Trung","ninjaanhem@email.com", "123456", true));
+                userDao.insert(new User(
+                        "Nguyen Duc Trung",
+                        "ninjaanhem@email.com",
+                        "123456",
+                        true          // true = admin
+                ));
             }
         });
 
@@ -157,10 +162,11 @@ public class LoginActivity extends AppCompatActivity {
 
     /* ---------- Lưu session khi login Room ----------------------------- */
     private void saveAuthSession(User user) {
-        SharedPreferences prefs = getSharedPreferences(PREF_AUTH, MODE_PRIVATE);
-        prefs.edit()
+        getSharedPreferences(PREF_AUTH, MODE_PRIVATE)
+                .edit()
                 .putString("email", user.getEmail())
-                .putInt   ("userId",  user.getId())
+                .putInt   ("userId", user.getId())
+                .putBoolean("role",  user.isRole())   // ✨ boolean
                 .apply();
     }
 
@@ -174,10 +180,21 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /* ---------------- Đi vào HomeActivity ------------------------------ */
+    /* ---------------- Đi vào màn hình tuỳ role -------------------------- */
     private void goHome() {
+        // 1. Đọc cờ role (isAdmin) đã lưu trong SharedPreferences
+        boolean isAdmin = getSharedPreferences(PREF_AUTH, MODE_PRIVATE)
+                .getBoolean("role", false);   // false mặc định = khách
 
-        startActivity(new Intent(this, CustomerProductListActivity.class)); //
+        // 2. Xác định Activity đích tuỳ theo role
+        Class<?> target = isAdmin
+                ? HomeActivity.class                     // admin / nhân viên
+                : CustomerProductListActivity.class;     // khách mua hàng
+
+        // 3. Điều hướng sang Activity đích
+        startActivity(new Intent(this, target));
+
+        // 4. Kết thúc LoginActivity để không quay lại khi bấm Back
         finish();
     }
 
