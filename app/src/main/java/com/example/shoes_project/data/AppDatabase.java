@@ -1,35 +1,45 @@
 package com.example.shoes_project.data;
 
-
-
 import android.content.Context;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {User.class}, version = 1, exportSchema = false)
+import com.example.shoes_project.model.Product;
+import com.example.shoes_project.model.User;
+
+@Database(
+        entities = {Product.class,  User.class},
+        version = 1,
+        exportSchema = false
+)
 public abstract class AppDatabase extends RoomDatabase {
+
+    // DAOs từ database đầu tiên
+    public abstract ProductDao productDao();
+
+    // DAO từ database thứ hai
     public abstract UserDao userDao();
-
     private static volatile AppDatabase INSTANCE;
-
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDatabase.class,
-                            "app_db"
-                    ).build();
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "app_database"
+                            )
+                            .allowMainThreadQueries() // Chỉ nên dùng cho testing
+                            .build();
                 }
             }
         }
         return INSTANCE;
     }
-
 }
+
+
 
 //package com.example.shoes_project.data;
 //

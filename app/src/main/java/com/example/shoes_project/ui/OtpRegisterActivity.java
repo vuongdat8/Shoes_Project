@@ -13,7 +13,7 @@ import androidx.room.Room;
 
 import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
-import com.example.shoes_project.data.User;
+import com.example.shoes_project.model.User;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Random;

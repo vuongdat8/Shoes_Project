@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
-import com.example.shoes_project.data.User;
+import com.example.shoes_project.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;

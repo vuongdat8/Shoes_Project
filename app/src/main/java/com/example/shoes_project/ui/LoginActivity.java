@@ -15,27 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
-import com.example.shoes_project.data.User;
+import com.example.shoes_project.model.User;
 import com.example.shoes_project.data.UserDao;
 import com.google.android.material.button.MaterialButton;
 
 // -------- Firebase & Facebook ----------
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.OAuthCredential;
-import com.google.firebase.auth.OAuthProvider;
-import com.google.firebase.auth.TwitterAuthProvider;
-import com.google.firebase.auth.GithubAuthProvider;
 // ---------------------------------------
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -186,7 +176,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /* ---------------- Đi vào HomeActivity ------------------------------ */
     private void goHome() {
-        startActivity(new Intent(this, HomeActivity.class));
+
+        startActivity(new Intent(this, CustomerProductListActivity.class)); //
         finish();
     }
 

@@ -5,6 +5,8 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.shoes_project.model.User;
+
 @Dao
 public interface UserDao {
     @Insert
