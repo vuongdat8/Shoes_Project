@@ -4,19 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
     tools:context=".ui.UserProfileActivity">
 
-    <!-- Lớp phủ màu -->
+    <ImageView
+        android:id="@+id/background_image_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/jota"
+        android:scaleType="centerCrop"
+        android:alpha="0.8"
+        android:contentDescription="Background image for user profile" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.3" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/my_primary"
-        android:alpha="0.7" >
-
+        android:alpha="0.1" >
     </RelativeLayout>
 
-    <!-- Phần tiêu đề + avatar -->
+
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -25,14 +37,6 @@
         android:gravity="center"
         android:paddingTop="48dp">
 
-<!--        <de.hdodenhof.circleimageview.CircleImageView-->
-<!--            android:id="@+id/iv_avatar"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            app:civ_border_width="2dp"-->
-<!--            app:civ_border_color="@color/white"-->
-<!--            android:src="@drawable/avatar_placeholder" />-->
-
         <TextView
             android:id="@+id/tv_full_name"
             android:layout_width="wrap_content"
@@ -40,15 +44,18 @@
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:layout_marginTop="12dp" />
-        <EditText
-            android:id="@+id/et_full_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-    </LinearLayout>
+            android:layout_marginTop="12dp"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2" /> <EditText
+        android:id="@+id/et_full_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textColorHint="#CCCCCC"/> </LinearLayout>
 
-    <!-- Card thông tin chi tiết -->
     <androidx.cardview.widget.CardView
         android:id="@+id/card_profile"
         android:layout_width="match_parent"
@@ -56,88 +63,87 @@
         android:layout_below="@id/header"
         android:layout_margin="20dp"
         app:cardCornerRadius="24dp"
-        app:cardElevation="6dp">
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="#CCFFFFFF"> <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textStyle="bold"
+            android:alpha="0.7"
+            android:textColor="@android:color/black" /> <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColor="@android:color/black" /> <EditText
+        android:id="@+id/et_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:visibility="gone"
+        android:textColor="@android:color/black"
+        android:textColorHint="#99000000" /> <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:orientation="horizontal"
+            android:gravity="center">
 
-            <!-- Email -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textStyle="bold"
-                android:alpha="0.7" />
-
-            <TextView
-                android:id="@+id/tv_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" />
-            <EditText
-                android:id="@+id/et_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:visibility="gone" />
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_edit"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="Edit Info"
+                app:cornerRadius="24dp"
+                android:backgroundTint="@color/white"
+                android:textColor="@android:color/black" />
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-            <!-- Nút chỉnh sửa & đổi mật khẩu -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="Edit Info"
-                    app:cornerRadius="24dp" />
-
-                <View
-                    android:layout_width="12dp"
-                    android:layout_height="match_parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_change_pwd"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="Change Password"
-                    app:cornerRadius="24dp" />
-            </LinearLayout>
-
-            <!-- Nút Logout -->
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_logout"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="319dp"
+                android:id="@+id/btn_change_pwd"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:text="Logout"
-                app:cornerRadius="24dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_gohome"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="154dp"
-                android:layout_marginBottom="156dp"
-                android:text="Go Home" />
-
+                android:layout_weight="1"
+                android:text="Change Password"
+                android:textSize="13dp"
+                app:cornerRadius="24dp"
+                android:backgroundTint="@color/white"
+                android:textColor="@android:color/black"
+                app:strokeColor="@color/black" />
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_logout"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent" android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="Logout"
+            app:cornerRadius="24dp"
+            android:backgroundTint="@color/white"
+            android:textColor="@android:color/black"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_gohome"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:text="Go Home"
+            android:backgroundTint="@color/white"
+            android:textColor="@android:color/black"/>
+
+    </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

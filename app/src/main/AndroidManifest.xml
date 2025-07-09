@@ -88,6 +88,18 @@
         <activity
             android:name=".ui.ChangePasswordActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.admin.Category_Admin_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.admin.CategoryDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.admin.Home_Admin_Activity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
