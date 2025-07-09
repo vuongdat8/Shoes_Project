@@ -233,7 +233,9 @@ import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
 import com.example.shoes_project.data.UserDao;
 import com.example.shoes_project.model.User;
+
 import com.example.shoes_project.ui.admin.Home_Admin_Activity;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -513,7 +515,9 @@ public class LoginActivity extends AppCompatActivity {
         boolean isAdmin = getSharedPreferences(PREF_AUTH, MODE_PRIVATE)
                 .getBoolean("role", false);   // false → khách
         Class<?> target = isAdmin
+
                 ? Home_Admin_Activity.class
+
                 : CustomerProductListActivity.class;
         startActivity(new Intent(this, target));
         finish();
