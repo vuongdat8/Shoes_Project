@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Shoes_Project</string>
+<<<<<<< HEAD
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
     <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
     <string name="default_web_client_id">1234567890-abcxyz123456.apps.googleusercontent.com</string>
@@ -28,4 +29,8 @@
     <string name="max_price_hint">Max</string>
     <string name="search_button">Search</string>
     <string name="all_categories">All Categories</string>
+=======
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+>>>>>>> huy
 </resources>

@@ -14,6 +14,7 @@ android {
         targetSdk     = 34   // nên khớp compileSdk trừ khi bạn muốn thử preview
         versionCode   = 1
         versionName   = "1.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -22,15 +23,18 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
+
                 "proguard-rules.pro",
             )
         }
     }
 
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 
     packaging {
         resources {
@@ -54,15 +58,16 @@ dependencies {
     implementation ("androidx.cardview:cardview:1.0.0")
 
     /* AndroidX & UI */
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
+
     /* Room (Java) */
     implementation(libs.room.runtime.android)
     implementation(libs.room.common.jvm)
-    annotationProcessor(libs.room.compiler)
 
     /* Test */
     testImplementation(libs.junit)
@@ -87,3 +92,6 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }
+
+
+
