@@ -1,9 +1,6 @@
-package com.example.shoes_project.data;
-
-
+package com.example.shoes_project.model;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -15,8 +12,6 @@ public class User {
     public String email;
     public String password;
     public boolean role;
-
-
 
     public User() { }
 
@@ -71,6 +66,6 @@ public User(String fname, String email, String password, boolean role) {
     this.email = email;
     this.password = password;
     this.role = role;
-}
+    }
 }
 

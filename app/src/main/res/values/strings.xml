@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Shoes_Project</string>
+    <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
+    <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
+    <string name="default_web_client_id">1234567890-abcxyz123456.apps.googleusercontent.com</string>
+    <string name="search_hint">Search products...</string>
+    <string name="add_product">Add Product</string>
+    <string name="view_orders">View Orders</string>
+    <string name="product_name">Product Name</string>
+    <string name="brand">Brand</string>
+    <string name="category">Category</string>
+    <string name="price">Price</string>
+    <string name="quantity">Quantity</string>
+    <string name="selling_price">Selling Price</string>
+    <string name="size">Size</string>
+    <string name="color">Color</string>
+    <string name="description">Description</string>
+    <string name="image_url">Image URL</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="product_added">Product added successfully</string>
+    <string name="product_updated">Product updated successfully</string>
+    <string name="field_required">This field is required</string>
+    <!-- Customer Home Strings -->
+    <string name="category_label">Category</string>
+    <string name="price_range_label">Price Range</string>
+    <string name="min_price_hint">Min</string>
+    <string name="max_price_hint">Max</string>
+    <string name="search_button">Search</string>
+    <string name="all_categories">All Categories</string>
 </resources>
