@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Shoes_Project</string>
 
+
     <string name="facebook_app_id">YOUR_FACEBOOK_APP_ID</string>
+    <string name="fb_login_protocol_scheme">fb1065036415226097</string>
+
     <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
     <string name="default_web_client_id">1234567890-abcxyz123456.apps.googleusercontent.com</string>
     <string name="search_hint">Search products...</string>
