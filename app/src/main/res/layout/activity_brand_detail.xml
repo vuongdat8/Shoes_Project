@@ -1,6 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.admin.BrandDetailActivity"
+    android:background="@android:color/black">
 
+    <ImageView
+        android:id="@+id/background_image_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/jota"
+        android:scaleType="centerCrop"
+        android:alpha="0.8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Background Image Detail" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@drawable/rounded_card_background"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thông tin chi tiết thương hiệu"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="24dp"
+                android:shadowColor="@android:color/black"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <ImageView
+                android:id="@+id/detail_brand_image"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="Brand Detail Image" />
+
+            <TextView
+                android:id="@+id/detail_brand_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tên thương hiệu: ABC Brand"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/text_field_background"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/detail_brand_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mô tả: Đây là mô tả chi tiết của thương hiệu."
+                android:textSize="16sp"
+                android:textColor="#CCFFFFFF"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/text_field_background"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/detail_brand_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trạng thái: Hoạt động"
+                android:textSize="16sp"
+                android:textColor="#CCFFFFFF"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/text_field_background"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/detail_brand_created_at"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ngày tạo: 2023-10-26 10:30:00"
+                android:textSize="14sp"
+                android:textColor="#99FFFFFF"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/text_field_background"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/detail_brand_updated_at"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ngày cập nhật: 2023-10-26 14:00:00"
+                android:textSize="14sp"
+                android:textColor="#99FFFFFF"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/text_field_background"
+                android:padding="10dp" />
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

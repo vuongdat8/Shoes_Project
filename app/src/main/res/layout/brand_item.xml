@@ -1,6 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout_item_roott"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_card_background"
+    android:padding="16dp"
+    android:layout_margin="8dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Brand Image -->
+    <ImageView
+        android:id="@+id/brand_image"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="Ảnh thương hiệu" />
+
+    <!-- Brand Name -->
+    <TextView
+        android:id="@+id/brand_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tên thương hiệu"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Brand Description -->
+    <TextView
+        android:id="@+id/brand_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mô tả thương hiệu"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Status -->
+    <TextView
+        android:id="@+id/brand_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trạng thái: Hoạt động"
+        android:textColor="@android:color/holo_green_dark"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Created At -->
+    <TextView
+        android:id="@+id/brand_created_at"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ngày tạo: 2023-10-26"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="2dp" />
+
+    <!-- Updated At -->
+    <TextView
+        android:id="@+id/brand_updated_at"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ngày cập nhật: 2023-10-27"
+        android:textSize="12sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Edit & Delete Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/button_edit_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sửa"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/button_delete_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xoá"
+            android:textColor="@android:color/holo_red_dark" />
+    </LinearLayout>
+</LinearLayout>
