@@ -13,7 +13,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
+
+
+    android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +23,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
 
-        android:theme="@style/Theme.Shoes_Project">
+        android:theme="@style/Theme.Shoes_Project"
+        >
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
+
         <activity
             android:name=".ui.admin.Brand_Admin_Activity"
             android:exported="false"
@@ -64,22 +74,17 @@
             android:name=".ui.AddEditProductActivity"
             android:exported="false" /> <!-- <activity -->
         <!-- Màn hình Login là LAUNCHER -->
+
         <activity
             android:name=".ui.LoginActivity"
-
-        android:theme="@style/Theme.Shoes_Project"
-        tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
-
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity> <!-- Màn hình Home: chỉ mở khi đã đăng nhập -->
+        </activity>
+        <!-- Màn hình Home: chỉ mở khi đã đăng nhập -->
         <activity
             android:name=".ui.HomeActivity"
             android:exported="false" />
@@ -105,7 +110,7 @@
             android:name=".ui.ChangePasswordActivity"
             android:exported="false" />
 
-        </activity>
+
 
     </application>
 

@@ -12,7 +12,7 @@ import com.example.shoes_project.model.User;
 
 @Database(
         entities = {Product.class, User.class, Brand.class},
-        version =1,               // ⬆️ Tăng version mỗi khi đổi schema
+        version =2,               // ⬆️ Tăng version mỗi khi đổi schema
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
