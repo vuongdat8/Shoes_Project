@@ -12,7 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/my_primary"
-        android:alpha="0.7" />
+        android:alpha="0.7" >
+
+    </RelativeLayout>
 
     <!-- Phần tiêu đề + avatar -->
     <LinearLayout
@@ -117,14 +119,22 @@
             </LinearLayout>
 
             <!-- Nút Logout -->
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_logout"
-                android:layout_width="match_parent"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="326dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="20dp"
                 android:text="Logout"
-                style="@style/Widget.Material3.Button.TonalButton"
                 app:cornerRadius="24dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_gohome"
+                android:layout_width="327dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="154dp"
+                android:layout_marginBottom="156dp"
+                android:text="Go Home" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

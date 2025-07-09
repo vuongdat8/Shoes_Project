@@ -112,7 +112,7 @@ public class UserProfileActivity extends AppCompatActivity {
     // View chỉnh sửa
     private EditText etFullName, etEmail;
     // Nút
-    private MaterialButton btnEdit, btnChangePwd, btnLogout;
+    private MaterialButton btnEdit, btnChangePwd, btnLogout, btnGoHome;
 
     private boolean isEditing = false;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -131,6 +131,7 @@ public class UserProfileActivity extends AppCompatActivity {
         etFullName = findViewById(R.id.et_full_name);
         etEmail    = findViewById(R.id.et_email);
 
+        btnGoHome     = findViewById(R.id.btn_gohome);
         btnEdit       = findViewById(R.id.btn_edit);
         btnChangePwd  = findViewById(R.id.btn_change_pwd);
         btnLogout     = findViewById(R.id.btn_logout);
@@ -161,6 +162,20 @@ public class UserProfileActivity extends AppCompatActivity {
         btnChangePwd.setOnClickListener(
                 v -> startActivity(new Intent(this, ChangePasswordActivity.class)));
         btnLogout.setOnClickListener(v -> doLogout());
+
+
+        /*6. Xử lí nút Go Home*/
+        btnGoHome.setOnClickListener(v -> {
+            boolean isAdmin = sp.getBoolean("role", false);   // mặc định false = customer
+
+            Intent intent = isAdmin
+                    ? new Intent(this, HomeActivity.class)            // role = 1
+                    : new Intent(this, CustomerProductListActivity.class); // role = 0
+
+            // tuỳ chọn: xoá stack cũ để tránh quay lại UserProfile
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
     }
 
     /* ----------------- Hiển thị user ----------------- */

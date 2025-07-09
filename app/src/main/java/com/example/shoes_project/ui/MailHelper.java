@@ -50,9 +50,9 @@ public final class MailHelper {
                  s.setDebug(true); // bật khi cần log
 
                 Message m = new MimeMessage(s);
-                m.setFrom(new InternetAddress(SMTP_EMAIL, "GO MAP App"));
+                m.setFrom(new InternetAddress(SMTP_EMAIL, "Shoes Store App"));
                 m.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-                m.setSubject("GO MAP – OTP Code");
+                m.setSubject("Shoes Store – OTP Code");
                 m.setText("Your OTP code is: " + otp + "\nValid for 5 minutes.");
                 m.setSentDate(new java.util.Date());
 
