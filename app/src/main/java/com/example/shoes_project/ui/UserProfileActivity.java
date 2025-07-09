@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
 import com.example.shoes_project.model.User;
+import com.example.shoes_project.ui.admin.Home_Admin_Activity;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.concurrent.ExecutorService;
@@ -169,7 +170,7 @@ public class UserProfileActivity extends AppCompatActivity {
             boolean isAdmin = sp.getBoolean("role", false);   // mặc định false = customer
 
             Intent intent = isAdmin
-                    ? new Intent(this, HomeActivity.class)            // role = 1
+                    ? new Intent(this, Home_Admin_Activity.class)            // role = 1
                     : new Intent(this, CustomerProductListActivity.class); // role = 0
 
             // tuỳ chọn: xoá stack cũ để tránh quay lại UserProfile

@@ -1,5 +1,6 @@
 package com.example.shoes_project.ui.admin;
 
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -217,5 +218,6 @@ public class Brand_Admin_Activity extends AppCompatActivity {
             database.brandDao().delete(brand);
             runOnUiThread(() -> Toast.makeText(this, "Xóa thành công!", Toast.LENGTH_SHORT).show());
         }).start();
+
     }
 }

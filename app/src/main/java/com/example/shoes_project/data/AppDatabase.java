@@ -10,9 +10,11 @@ import com.example.shoes_project.model.Brand;
 import com.example.shoes_project.model.Product;
 import com.example.shoes_project.model.User;
 
+import com.example.shoes_project.model.Category;
 @Database(
-        entities = {Product.class, User.class, Brand.class},
-        version =2,               // ⬆️ Tăng version mỗi khi đổi schema
+        entities = {Product.class, User.class, Category.class},
+        version = 2,               // ⬆️ Tăng version mỗi khi đổi schema
+
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -22,6 +24,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao    userDao();
     public abstract BrandDao brandDao() ;
 
+    public abstract CategoryDAO categoryDao();
     /* ---------- Singleton ---------- */
     private static volatile AppDatabase INSTANCE;
 
@@ -42,6 +45,5 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
-
-
 }
+

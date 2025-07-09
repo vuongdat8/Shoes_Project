@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.shoes_project"
-        minSdk        = 23
+        minSdk        = 26
         targetSdk     = 34   // nên khớp compileSdk trừ khi bạn muốn thử preview
         versionCode   = 1
         versionName   = "1.0"
@@ -68,6 +68,9 @@ dependencies {
     /* Room (Java) */
     implementation(libs.room.runtime.android)
     implementation(libs.room.common.jvm)
+    implementation(libs.litert.support.api)
+    annotationProcessor(libs.room.compiler)
+
 
     /* Test */
     testImplementation(libs.junit)
@@ -92,6 +95,4 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }
-
-
 
