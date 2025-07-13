@@ -107,10 +107,7 @@ public class Category_Admin_Activity extends AppCompatActivity {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null);
         EditText nameEditText = dialogView.findViewById(R.id.editTextCategoryName);
         EditText descriptionEditText = dialogView.findViewById(R.id.editTextCategoryDescription);
-        // Corrected: Removed reference to editTextCategoryImageUrl
-        // EditText imageUrlEditText = dialogView.findViewById(R.id.editTextCategoryImageUrl); // THIS WAS THE ERROR
 
-        // Corrected: Get references to the new ImageView and Button for image selection
         dialogImageView = dialogView.findViewById(R.id.imageViewSelectedCategory);
         Button selectImageButton = dialogView.findViewById(R.id.buttonSelectImage);
         SwitchMaterial activeSwitch = dialogView.findViewById(R.id.switchCategoryActive);

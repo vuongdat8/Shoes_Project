@@ -96,6 +96,14 @@
             android:name=".ui.admin.CategoryDetailActivity"
             android:exported="false" />
 
+
+        <activity
+            android:name=".ui.admin.Brand_Admin_Activity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.admin.BrandDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.admin.Home_Admin_Activity"
             android:exported="false" />
