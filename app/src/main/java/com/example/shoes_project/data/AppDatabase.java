@@ -1,17 +1,30 @@
 package com.example.shoes_project.data;
 
-
-
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {User.class}, version = 1, exportSchema = false)
-public abstract class AppDatabase extends RoomDatabase {
-    public abstract UserDao userDao();
+import com.example.shoes_project.data.dao.OrderDao;
+import com.example.shoes_project.data.dao.OrderDetailDao;
+import com.example.shoes_project.model.Order;
+import com.example.shoes_project.data.User;
+import com.example.shoes_project.model.OrderDetail;
 
+@Database(
+        entities = {Order.class, User.class, OrderDetail.class},
+        version = 2,               // ⬆️ Tăng version mỗi khi đổi schema
+        exportSchema = false
+)
+public abstract class AppDatabase extends RoomDatabase {
+
+    /* ---------- DAO ---------- */
+    public abstract OrderDao orderDao();
+    public abstract UserDao    userDao();
+    public abstract OrderDetailDao orderDetailDao();
+
+    /* ---------- Singleton ---------- */
     private static volatile AppDatabase INSTANCE;
 
     public static AppDatabase getInstance(Context context) {
@@ -19,69 +32,16 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
-                            context.getApplicationContext(),
-                            AppDatabase.class,
-                            "app_db"
-                    ).build();
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "app_db"
+                            )
+                            .fallbackToDestructiveMigration()  // ⚠ Xoá DB cũ khi schema đổi
+                            .allowMainThreadQueries()          // Chỉ dùng khi testing
+                            .build();
                 }
             }
         }
         return INSTANCE;
     }
-
 }
-
-//package com.example.shoes_project.data;
-//
-//import android.content.Context;
-//
-//import androidx.annotation.NonNull;
-//import androidx.room.Database;
-//import androidx.room.Room;
-//import androidx.room.RoomDatabase;
-//import androidx.sqlite.db.SupportSQLiteDatabase;
-//
-//import java.util.concurrent.Executors;
-//
-//@Database(entities = {User.class}, version = 1, exportSchema = false)
-//public abstract class AppDatabase extends RoomDatabase {
-//
-//    public abstract UserDao userDao();
-//
-//    private static volatile AppDatabase INSTANCE;
-//
-//    /**  👇 Chỉnh ở đây  */
-//    public static AppDatabase getInstance(Context context) {
-//        if (INSTANCE == null) {
-//            synchronized (AppDatabase.class) {
-//                if (INSTANCE == null) {
-//
-//                    /* 1) XÓA TOÀN BỘ FILE app_db MỖI KHI ỨNG DỤNG CHẠY  */
-//                    // Nếu muốn GIỮ schema và chỉ xoá dữ liệu, comment dòng này.
-//                    context.deleteDatabase("app_db");
-//
-//                    /* 2) TẠO LẠI DATABASE  */
-//                    INSTANCE = Room.databaseBuilder(
-//                                    context.getApplicationContext(),
-//                                    AppDatabase.class,
-//                                    "app_db")
-//                            /* Nếu chỉ muốn xoá bản ghi chứ không xoá file, bỏ đoạn deleteDatabase ở trên
-//                               và dùng callback dưới đây  */
-//                            .addCallback(new Callback() {
-//                                @Override
-//                                public void onOpen(@NonNull SupportSQLiteDatabase db) {
-//                                    super.onOpen(db);
-//                                    // Chạy nền để tránh block UI
-//                                    Executors.newSingleThreadExecutor().execute(() -> {
-//                                        // Xoá tất cả bảng, giữ schema
-//                                        INSTANCE.clearAllTables();
-//                                    });
-//                                }
-//                            })
-//                            .build();
-//                }
-//            }
-//        }
-//        return INSTANCE;
-//    }
-//}

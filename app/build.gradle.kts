@@ -6,16 +6,12 @@ plugins {
 android {
     /* ---- cấu hình chung ---- */
     namespace   = "com.example.shoes_project"
-
-    /* API 34 (Android 14) là SDK ổn định cao nhất tính tới 07‑2025.
-       Dùng 35/36 cần AGP preview và SDK preview, dễ phát sinh lỗi. */
     compileSdk  = 36
 
     defaultConfig {
         applicationId = "com.example.shoes_project"
         minSdk        = 23
         targetSdk     = 34   // nên khớp compileSdk trừ khi bạn muốn thử preview
-
         versionCode   = 1
         versionName   = "1.0"
 
@@ -27,18 +23,19 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
+
                 "proguard-rules.pro",
             )
         }
     }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    /* ── FIX trùng file META‑INF ──
-       Kể từ AGP 7.0, dùng block packaging.resources thay cho packagingOptions */
+
     packaging {
         resources {
             excludes += setOf(
@@ -53,16 +50,25 @@ android {
 }
 
 dependencies {
+    dependencies {
+        implementation ("androidx.room:room-runtime:2.5.1")  // Phiên bản mới nhất của Room
+        annotationProcessor ("androidx.room:room-compiler:2.5.1")
+    }
+    implementation ("androidx.recyclerview:recyclerview:1.4.0")
+    implementation ("androidx.cardview:cardview:1.0.0")
+
     /* AndroidX & UI */
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
+
     /* Room (Java) */
     implementation(libs.room.runtime.android)
     implementation(libs.room.common.jvm)
-    annotationProcessor(libs.room.compiler)
+    implementation(libs.play.services.ads.api)
 
     /* Test */
     testImplementation(libs.junit)
@@ -81,6 +87,11 @@ dependencies {
     implementation(libs.androidx.browser)
 
     /* JavaMail */
+
     implementation("com.sun.mail:android-mail:1.6.7")
     implementation("com.sun.mail:android-activation:1.6.7")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 }
+
+

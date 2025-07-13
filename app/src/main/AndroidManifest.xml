@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.CAMERA"
+        tools:ignore="PermissionImpliesUnsupportedChromeOsHardware" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
 
         android:allowBackup="true"
@@ -14,9 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shoes_Project">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1376392314107566~8992332881"/>
+
+
+
         <!-- Màn hình Login là LAUNCHER -->
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.OrderDetailActivity"
             android:exported="true">
 
             <intent-filter>
@@ -51,6 +63,11 @@
         <activity
             android:name=".ui.ChangePasswordActivity"
             android:exported="false"/>
+        <activity
+            android:name=".ui.OrderHistoryActivity"
+            android:exported="false"/>
+
+
     </application>
 
 </manifest>
