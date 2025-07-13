@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
 import com.example.shoes_project.model.Product;
+import com.bumptech.glide.Glide;
+import java.io.File;
 
 public class CustomerProductDetailActivity extends AppCompatActivity {
     private ImageButton btnBack;
@@ -107,7 +109,7 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
             tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
 
             // Calculate and show discount percentage
-            double discountPercent = ((currentProduct.getSellingPrice() - currentProduct.getPrice()) / currentProduct.getSellingPrice()) * 100;
+            double discountPercent = ((currentProduct.getSellingPrice() - currentProduct.getPrice()) / currentProduct.getSellingPrice()) * 1;
             tvDiscountBadge.setText(String.format("%.0f%% OFF", discountPercent));
             tvDiscountBadge.setVisibility(View.VISIBLE);
         } else {
@@ -118,8 +120,45 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
         // Stock status and quantity
         updateStockStatus();
 
-        // Load product image using Glide or Picasso if needed
-        // Glide.with(this).load(currentProduct.getImageUrl()).into(ivProductImage);
+        // Load product image - SỬA CHÍNH TẠI ĐÂY
+        loadProductImage(currentProduct.getImageUrl());
+    }
+
+    // THÊM METHOD LOAD IMAGE - QUAN TRỌNG
+    private void loadProductImage(String imagePath) {
+        if (imagePath != null && !imagePath.isEmpty()) {
+            if (imagePath.startsWith("http") || imagePath.startsWith("https")) {
+                // Load ảnh từ URL
+                Glide.with(this)
+                        .load(imagePath)
+                        .placeholder(R.drawable.ic_image_placeholder)
+                        .error(R.drawable.ic_image_placeholder)
+                        .into(ivProductImage);
+            } else if (imagePath.startsWith("content://")) {
+                // Load ảnh từ Content URI (Gallery)
+                Glide.with(this)
+                        .load(imagePath)
+                        .placeholder(R.drawable.ic_image_placeholder)
+                        .error(R.drawable.ic_image_placeholder)
+                        .into(ivProductImage);
+            } else {
+                // Load ảnh từ file path (Internal Storage)
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    Glide.with(this)
+                            .load(imageFile)
+                            .placeholder(R.drawable.ic_image_placeholder)
+                            .error(R.drawable.ic_image_placeholder)
+                            .into(ivProductImage);
+                } else {
+                    // Nếu file không tồn tại, hiển thị placeholder
+                    ivProductImage.setImageResource(R.drawable.ic_image_placeholder);
+                }
+            }
+        } else {
+            // Nếu không có ảnh, hiển thị placeholder
+            ivProductImage.setImageResource(R.drawable.ic_image_placeholder);
+        }
     }
 
     private void updateStockStatus() {

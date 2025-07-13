@@ -1,148 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F5F5F5">
-
-    <!-- Header Section -->
+    tools:context=".ui.CustomerProductListActivity">
+    <!-- Background Image with Overlay -->
+    <ImageView
+        android:id="@+id/background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.8"
+        android:scaleType="centerCrop"
+        android:src="@drawable/jota"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Dark Overlay for Better Readability -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Header Section with Profile Button -->
     <LinearLayout
+        android:id="@+id/header_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2196F3"
+        android:elevation="12dp"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:elevation="8dp"
+            android:text="Profile"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:translationZ="8dp"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="28dp"
+            app:iconTint="@color/black"
+            app:strokeColor="@color/white"
+            app:strokeWidth="2dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="App Shoes"
+            android:layout_gravity="center_horizontal"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:shadowColor="@color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4" />
+        <!-- Search Bar with Glass Effect -->
 
-        <!-- Search Bar -->
-        <com.google.android.material.textfield.TextInputLayout
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search products..."
-            android:textColorHint="#FFFFFF"
-            android:backgroundTint="#FFFFFF">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_search"
+            android:layout_marginHorizontal="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp"
+            app:cardBackgroundColor="#80FFFFFF">
+         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="#333333"
-                android:background="#FFFFFF"
-                android:drawableEnd="@android:drawable/ic_search_category_default"
-                android:drawablePadding="8dp"
-                android:padding="12dp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
+                android:hint="Search products..."
+                app:hintTextColor="#666666"
+                app:boxBackgroundMode="none">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:background="@android:color/transparent"
+                    android:drawableEnd="@android:drawable/ic_search_category_default"
+                    android:drawablePadding="8dp"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textColor="#333333" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
-
-    <!-- Filter Section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#FFFFFF"
-        android:elevation="2dp">
-
-        <!-- Category Filter -->
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:padding="8dp" />
-
-        <!-- Brand Filter -->
-        <Spinner
-            android:id="@+id/spinner_brand"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:padding="8dp" />
-
-        <!-- Clear Filter Button -->
-        <Button
-            android:id="@+id/btn_clear_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clear"
-            android:textSize="12sp"
-            android:layout_marginStart="8dp"
-            android:background="@android:color/transparent"
-            android:textColor="#2196F3"
-            android:minWidth="0dp"
-            android:minHeight="0dp" />
-
-    </LinearLayout>
-
-    <!-- Product Count -->
-    <TextView
-        android:id="@+id/tv_product_count"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Showing 0 products"
-        android:textSize="14sp"
-        android:textColor="#666666"
-        android:padding="16dp"
-        android:background="#FFFFFF" />
-
-    <!-- Products RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_products"
-        android:layout_width="match_parent"
+    <!-- Content Section -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
-        android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:layout_marginTop="8dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_section">
 
-    <!-- No Products Message -->
-    <LinearLayout
-        android:id="@+id/layout_no_products"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@android:drawable/ic_menu_search"
-            android:alpha="0.3"
-            android:layout_marginBottom="16dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No products found"
-            android:textSize="18sp"
-            android:textColor="#666666"
-            android:layout_marginBottom="8dp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Try adjusting your search or filters"
-            android:textSize="14sp"
-            android:textColor="#999999" />
+            <!-- Filter Section with Glass Effect -->
 
-    </LinearLayout>
+            <com.google.android.material.card.MaterialCardView
 
-</LinearLayout>
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:layout_margin="16dp"
+
+                app:cardCornerRadius="12dp"
+
+                app:cardElevation="8dp"
+
+                app:strokeColor="@color/white"
+
+                app:strokeWidth="1dp"
+
+                app:cardBackgroundColor="#80FFFFFF">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <!-- Category Filter -->
+                    <Spinner
+                        android:id="@+id/spinner_category"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@android:drawable/btn_dropdown"
+                        android:padding="8dp" />
+                    <!-- Brand Filter -->
+                    <Spinner
+                        android:id="@+id/spinner_brand"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:drawable/btn_dropdown"
+                        android:padding="8dp" />
+
+                    <!-- Clear Filter Button -->
+                    <Button
+                        android:id="@+id/btn_clear_filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Clear"
+                        android:textSize="12sp"
+                        android:layout_marginStart="8dp"
+                        android:background="@android:color/transparent"
+                        android:textColor="#2196F3"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <!-- Product Count with Glass Effect -->
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#80FFFFFF">
+                <TextView
+                    android:id="@+id/tv_product_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Showing 0 products"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:textStyle="bold"
+                    android:padding="12dp"
+                    android:gravity="center" />
+            </com.google.android.material.card.MaterialCardView>
+            <!-- Products RecyclerView Container -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="#90FFFFFF">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_products"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="8dp"
+                    android:clipToPadding="false"
+                    android:scrollbars="vertical" />
+            </com.google.android.material.card.MaterialCardView>
+            <!-- No Products Message -->
+            <LinearLayout
+                android:id="@+id/layout_no_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="32dp"
+                android:visibility="gone">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:strokeColor="@color/white"
+                    app:strokeWidth="2dp"
+                    app:cardBackgroundColor="#90FFFFFF">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="32dp">
+                        <ImageView
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@android:drawable/ic_menu_search"
+                            android:alpha="0.3"
+                            android:layout_marginBottom="16dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="No products found"
+                            android:textSize="18sp"
+                            android:textColor="#666666"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Try adjusting your search or filters"
+                            android:textSize="14sp"
+                            android:textColor="#999999"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

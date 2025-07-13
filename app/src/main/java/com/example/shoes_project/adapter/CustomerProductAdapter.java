@@ -4,19 +4,20 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.shoes_project.R;
 import com.example.shoes_project.model.Product;
+import com.bumptech.glide.Glide;
+import java.io.File;
 import java.util.List;
 
 public class CustomerProductAdapter extends RecyclerView.Adapter<CustomerProductAdapter.ProductViewHolder> {
     private Context context;
     private List<Product> productList;
-    private OnProductClickListener onProductClickListener;
+    private OnProductClickListener listener;
 
     public interface OnProductClickListener {
         void onProductClick(Product product);
@@ -29,7 +30,7 @@ public class CustomerProductAdapter extends RecyclerView.Adapter<CustomerProduct
     }
 
     public void setOnProductClickListener(OnProductClickListener listener) {
-        this.onProductClickListener = listener;
+        this.listener = listener;
     }
 
     @NonNull
@@ -50,17 +51,11 @@ public class CustomerProductAdapter extends RecyclerView.Adapter<CustomerProduct
         return productList.size();
     }
 
-    public void updateProductList(List<Product> newProductList) {
-        this.productList = newProductList;
-        notifyDataSetChanged();
-    }
-
     class ProductViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivProductImage;
         private TextView tvProductName, tvBrand, tvCategory, tvPrice, tvOriginalPrice,
-                tvStockStatus, tvSize;
+                tvDiscountBadge, tvStockStatus, tvQuantity;
         private View viewStockIndicator;
-        private Button btnViewDetails;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,62 +70,111 @@ public class CustomerProductAdapter extends RecyclerView.Adapter<CustomerProduct
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvPrice = itemView.findViewById(R.id.tv_price);
             tvOriginalPrice = itemView.findViewById(R.id.tv_original_price);
+            tvDiscountBadge = itemView.findViewById(R.id.tv_discount_badge);
             tvStockStatus = itemView.findViewById(R.id.tv_stock_status);
-            tvSize = itemView.findViewById(R.id.tv_size);
+            tvQuantity = itemView.findViewById(R.id.tv_quantity);
             viewStockIndicator = itemView.findViewById(R.id.view_stock_indicator);
-            btnViewDetails = itemView.findViewById(R.id.btn_view_details);
         }
 
         private void setupClickListeners() {
             itemView.setOnClickListener(v -> {
-                if (onProductClickListener != null) {
-                    onProductClickListener.onProductClick(productList.get(getAdapterPosition()));
-                }
-            });
-
-            btnViewDetails.setOnClickListener(v -> {
-                if (onProductClickListener != null) {
-                    onProductClickListener.onViewDetailsClick(productList.get(getAdapterPosition()));
+                if (listener != null) {
+                    listener.onProductClick(productList.get(getAdapterPosition()));
                 }
             });
         }
 
         public void bind(Product product) {
+            // Load product image - THÊM CHỨC NĂNG LOAD IMAGE
+            loadProductImage(product.getImageUrl());
+
+            // Basic product information
             tvProductName.setText(product.getProductName());
             tvBrand.setText(product.getBrand());
             tvCategory.setText(product.getCategoryName());
             tvPrice.setText("$" + String.format("%.2f", product.getPrice()));
-            tvSize.setText("Size: " + product.getSize());
 
-            // Show original price if selling price is different
+            // Handle original price and discount
             if (product.getSellingPrice() != product.getPrice()) {
                 tvOriginalPrice.setText("$" + String.format("%.2f", (double) product.getSellingPrice()));
                 tvOriginalPrice.setVisibility(View.VISIBLE);
-                // Add strikethrough effect
                 tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
+
+                // Calculate and show discount percentage
+                double discountPercent = ((product.getSellingPrice() - product.getPrice()) / product.getSellingPrice()) * 1;
+                tvDiscountBadge.setText(String.format("%.0f%% OFF", discountPercent));
+                tvDiscountBadge.setVisibility(View.VISIBLE);
             } else {
                 tvOriginalPrice.setVisibility(View.GONE);
+                tvDiscountBadge.setVisibility(View.GONE);
             }
 
-            // Set stock status
-            if (product.getQuantity() > 0) {
-                if (product.getQuantity() > 10) {
-                    tvStockStatus.setText("In Stock (" + product.getQuantity() + ")");
-                    tvStockStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
-                    viewStockIndicator.setBackgroundResource(R.drawable.circle_green);
+            // Stock status and quantity
+            updateStockStatus(product);
+        }
+
+        // THÊM METHOD LOAD IMAGE - TƯƠNG TỰ NHƯ CustomerProductDetailActivity
+        private void loadProductImage(String imagePath) {
+            if (imagePath != null && !imagePath.isEmpty()) {
+                if (imagePath.startsWith("http") || imagePath.startsWith("https")) {
+                    // Load ảnh từ URL
+                    Glide.with(context)
+                            .load(imagePath)
+                            .placeholder(R.drawable.ic_image_placeholder)
+                            .error(R.drawable.ic_image_placeholder)
+                            .into(ivProductImage);
+                } else if (imagePath.startsWith("content://")) {
+                    // Load ảnh từ Content URI (Gallery)
+                    Glide.with(context)
+                            .load(imagePath)
+                            .placeholder(R.drawable.ic_image_placeholder)
+                            .error(R.drawable.ic_image_placeholder)
+                            .into(ivProductImage);
                 } else {
-                    tvStockStatus.setText("Low Stock (" + product.getQuantity() + ")");
+                    // Load ảnh từ file path (Internal Storage)
+                    File imageFile = new File(imagePath);
+                    if (imageFile.exists()) {
+                        Glide.with(context)
+                                .load(imageFile)
+                                .placeholder(R.drawable.ic_image_placeholder)
+                                .error(R.drawable.ic_image_placeholder)
+                                .into(ivProductImage);
+                    } else {
+                        // Nếu file không tồn tại, hiển thị placeholder
+                        ivProductImage.setImageResource(R.drawable.ic_image_placeholder);
+                    }
+                }
+            } else {
+                // Nếu không có ảnh, hiển thị placeholder
+                ivProductImage.setImageResource(R.drawable.ic_image_placeholder);
+            }
+        }
+
+        private void updateStockStatus(Product product) {
+            int quantity = product.getQuantity();
+            tvQuantity.setText(quantity + " items");
+
+            if (quantity > 0) {
+                if (quantity > 10) {
+                    tvStockStatus.setText("In Stock");
+                    tvStockStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
+                    if (viewStockIndicator != null) {
+                        viewStockIndicator.setBackgroundResource(R.drawable.circle_green);
+                    }
+                } else {
+                    tvStockStatus.setText("Low Stock");
                     tvStockStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark));
-                    viewStockIndicator.setBackgroundResource(R.drawable.circle_orange);
+                    if (viewStockIndicator != null) {
+                        viewStockIndicator.setBackgroundResource(R.drawable.circle_orange);
+                    }
                 }
             } else {
                 tvStockStatus.setText("Out of Stock");
                 tvStockStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
-                viewStockIndicator.setBackgroundResource(R.drawable.circle_red);
+                if (viewStockIndicator != null) {
+                    viewStockIndicator.setBackgroundResource(R.drawable.circle_red);
+                }
             }
-
-            // Load product image using Glide or Picasso
-            // Glide.with(context).load(product.getImageUrl()).into(ivProductImage);
         }
     }
 }

@@ -49,6 +49,15 @@ public class CustomerProductListActivity extends AppCompatActivity implements Cu
         setupRecyclerView();
         setupSearchAndFilters();
         loadProducts();
+        onClickProfileButton();
+    }
+
+    private void onClickProfileButton() {
+        findViewById(R.id.btn_profile).setOnClickListener(v -> {
+            // Navigate to customer profile activity
+            Intent intent = new Intent(CustomerProductListActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void initViews() {
