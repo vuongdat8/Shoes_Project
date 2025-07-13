@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+//addedit
 public class AddEditProductActivity extends AppCompatActivity {
     private EditText etProductName, etBrand, etCategory, etPrice, etQuantity,
             etSellingPrice, etSize, etDescription, etColor;
