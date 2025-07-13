@@ -1,8 +1,0 @@
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Khi ô đang được focus -->
-    <item android:state_focused="true"
-        android:drawable="@drawable/bg_otp_box_focused"/>
-
-    <!-- Trạng thái bình thường -->
-    <item android:drawable="@drawable/bg_otp_box"/>
-</selector>
