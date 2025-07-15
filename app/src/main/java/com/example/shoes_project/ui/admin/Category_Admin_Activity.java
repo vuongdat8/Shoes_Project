@@ -14,7 +14,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.shoes_project.R;
 import com.example.shoes_project.adapter.CategoryAdapter;
 import com.example.shoes_project.data.AppDatabase;
+import com.example.shoes_project.model.Brand; // <<<<<<< THÊM: Import model Brand
 import com.example.shoes_project.model.Category;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -33,26 +33,26 @@ import java.util.Locale;
 
 public class Category_Admin_Activity extends AppCompatActivity {
 
+    public static final String EXTRA_BRAND_ID = "extra_brand_id";
+
     private RecyclerView recyclerView;
     private CategoryAdapter adapter;
     private AppDatabase database;
     private Button addCategoryButton;
+    private TextView brandNameHeaderTextView; // <<<<<<< THÊM: Biến cho TextView header
 
-    // To store the selected image URI temporarily for the dialog
+    private int currentBrandId = -1;
+
     private Uri selectedImageUri;
-    // Reference to the ImageView inside the dialog to display the chosen image
     private ImageView dialogImageView;
 
-    // Define a DateTimeFormatter for your string representation
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-    // ActivityResultLauncher for selecting image from gallery
     private final ActivityResultLauncher<String> pickImageLauncher = registerForActivityResult(
-            new ActivityResultContracts.GetContent(), // Contract to get content (e.g., "image/*")
+            new ActivityResultContracts.GetContent(),
             uri -> {
                 if (uri != null) {
                     selectedImageUri = uri;
-                    // Display the selected image in the ImageView within the dialog
                     if (dialogImageView != null) {
                         Glide.with(this).load(selectedImageUri).into(dialogImageView);
                     }
@@ -65,16 +65,23 @@ public class Category_Admin_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_admin);
 
+        // Lấy brandId từ Intent
+        currentBrandId = getIntent().getIntExtra(EXTRA_BRAND_ID, -1);
+        if (currentBrandId == -1) {
+            Toast.makeText(this, "Không tìm thấy thông tin hãng!", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Khởi tạo các view
         recyclerView = findViewById(R.id.recycler_view_category);
         addCategoryButton = findViewById(R.id.button_add_category);
+        brandNameHeaderTextView = findViewById(R.id.textView_brand_name_header); // <<<<<<< THÊM: Ánh xạ TextView
 
-        // Setup RecyclerView
+        // Cấu hình RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Initialize Database
         database = AppDatabase.getInstance(this);
 
-        // Initialize Adapter with empty list and set actions for edit and delete
         adapter = new CategoryAdapter(new ArrayList<>(), new CategoryAdapter.CategoryActionListener() {
             @Override
             public void onEditCategory(Category category) {
@@ -83,40 +90,56 @@ public class Category_Admin_Activity extends AppCompatActivity {
 
             @Override
             public void onDeleteCategory(Category category) {
-                // Show custom confirmation dialog before deleting
                 showDeleteConfirmationDialog(category);
             }
         });
 
         recyclerView.setAdapter(adapter);
 
-        // Observe live data for Category list
-        database.categoryDao().getAllCategories().observe(this, new Observer<List<Category>>() {
-            @Override
-            public void onChanged(List<Category> categories) {
-                adapter.setCategories(categories);  // Update data from DB to adapter
-            }
-        });
+        // Tải dữ liệu
+        loadBrandName(); // <<<<<<< THÊM: Gọi hàm tải tên Brand
+        loadCategoriesForBrand();
 
-        // Add new Category on Button click
         addCategoryButton.setOnClickListener(v -> showAddCategoryDialog());
     }
 
-    // Show Add Category Dialog
+    /**
+     * Tải tên của Brand hiện tại và hiển thị nó trên header.
+     */
+    private void loadBrandName() { // <<<<<<< THÊM: Phương thức mới
+        new Thread(() -> {
+            // Giả sử bạn có brandDao() trong AppDatabase và getBrandById() trong BrandDAO
+            Brand brand = database.brandDao().getBrandById(currentBrandId);
+            if (brand != null) {
+                runOnUiThread(() -> {
+                    brandNameHeaderTextView.setText("Quản lý danh mục cho hãng: " + brand.getName());
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * Tải danh sách các Category thuộc về Brand hiện tại.
+     */
+    private void loadCategoriesForBrand() {
+        new Thread(() -> {
+            List<Category> categories = database.categoryDao().getCategoriesForBrand(currentBrandId);
+            runOnUiThread(() -> {
+                adapter.setCategories(categories);
+            });
+        }).start();
+    }
+
     private void showAddCategoryDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null);
         EditText nameEditText = dialogView.findViewById(R.id.editTextCategoryName);
         EditText descriptionEditText = dialogView.findViewById(R.id.editTextCategoryDescription);
-
         dialogImageView = dialogView.findViewById(R.id.imageViewSelectedCategory);
         Button selectImageButton = dialogView.findViewById(R.id.buttonSelectImage);
         SwitchMaterial activeSwitch = dialogView.findViewById(R.id.switchCategoryActive);
 
-        // Reset selectedImageUri and set placeholder image for a new entry
         selectedImageUri = null;
         dialogImageView.setImageResource(R.drawable.a1);
-
-        // Set listener for the "Select Image" button
         selectImageButton.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -127,59 +150,48 @@ public class Category_Admin_Activity extends AppCompatActivity {
                     String description = descriptionEditText.getText().toString().trim();
                     boolean isActive = activeSwitch.isChecked();
 
-                    // Check if an image has been selected
                     if (!name.isEmpty() && !description.isEmpty() && selectedImageUri != null) {
-                        // Store the URI string. In a production app, you might copy this URI's content
-                        // to app-specific storage or upload it to a server.
                         String imageUrl = selectedImageUri.toString();
-
                         String currentTime = LocalDateTime.now().format(formatter);
 
-                        Category newCategory = new Category(name, description, imageUrl, isActive);
-                        newCategory.setCreatedAt(currentTime); // Set creation timestamp
-                        newCategory.setUpdatedAt(currentTime); // Set update timestamp initially
+                        Category newCategory = new Category(currentBrandId, name, description, imageUrl, isActive);
+                        newCategory.setCreatedAt(currentTime);
+                        newCategory.setUpdatedAt(currentTime);
 
                         new Thread(() -> {
                             database.categoryDao().insert(newCategory);
-                            runOnUiThread(() -> Toast.makeText(Category_Admin_Activity.this, "Danh mục đã được thêm thành công!", Toast.LENGTH_SHORT).show());
+                            // Sau khi insert, tải lại danh sách trên UI thread
+                            runOnUiThread(this::loadCategoriesForBrand);
+                            runOnUiThread(() -> Toast.makeText(Category_Admin_Activity.this, "Danh mục đã được thêm!", Toast.LENGTH_SHORT).show());
                         }).start();
                     } else {
-                        Toast.makeText(Category_Admin_Activity.this, "Vui lòng điền đầy đủ Tên, Mô tả và chọn ảnh!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Category_Admin_Activity.this, "Vui lòng điền đủ thông tin và chọn ảnh!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-
         builder.create().show();
     }
 
-    // Show Edit Category Dialog
     private void showEditCategoryDialog(Category category) {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_category, null);
         EditText nameEditText = dialogView.findViewById(R.id.editTextCategoryName);
         EditText descriptionEditText = dialogView.findViewById(R.id.editTextCategoryDescription);
-        // Corrected: Removed reference to editTextCategoryImageUrl
-        // EditText imageUrlEditText = dialogView.findViewById(R.id.editTextCategoryImageUrl); // THIS WAS THE ERROR
-
-        // Corrected: Get references to the new ImageView and Button for image selection
         dialogImageView = dialogView.findViewById(R.id.imageViewSelectedCategory);
         Button selectImageButton = dialogView.findViewById(R.id.buttonSelectImage);
         SwitchMaterial activeSwitch = dialogView.findViewById(R.id.switchCategoryActive);
 
-        // Populate existing category data
         nameEditText.setText(category.getName());
         descriptionEditText.setText(category.getDescription());
         activeSwitch.setChecked(category.isActive());
 
-        // Load existing image if available, otherwise show placeholder
         if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) {
-            selectedImageUri = Uri.parse(category.getImageUrl()); // Set current image URI
+            selectedImageUri = Uri.parse(category.getImageUrl());
             Glide.with(this).load(selectedImageUri).into(dialogImageView);
         } else {
             dialogImageView.setImageResource(R.drawable.a2);
-            selectedImageUri = null; // No existing image
+            selectedImageUri = null;
         }
 
-        // Set listener for the "Select Image" button
         selectImageButton.setOnClickListener(v -> pickImageLauncher.launch("image/*"));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -190,62 +202,53 @@ public class Category_Admin_Activity extends AppCompatActivity {
                     String description = descriptionEditText.getText().toString().trim();
                     boolean isActive = activeSwitch.isChecked();
 
-                    // Check if an image has been selected (or already existed)
                     if (!name.isEmpty() && !description.isEmpty() && selectedImageUri != null) {
-                        String imageUrl = selectedImageUri.toString(); // Use the currently selected/existing image URI
-
+                        String imageUrl = selectedImageUri.toString();
                         String currentTime = LocalDateTime.now().format(formatter);
 
                         category.setName(name);
                         category.setDescription(description);
-                        category.setImageUrl(imageUrl); // Update image URL
+                        category.setImageUrl(imageUrl);
                         category.setActive(isActive);
-                        category.setUpdatedAt(currentTime); // Update only updated timestamp
+                        category.setUpdatedAt(currentTime);
 
                         new Thread(() -> {
                             database.categoryDao().update(category);
-                            runOnUiThread(() -> Toast.makeText(Category_Admin_Activity.this, "Danh mục đã được cập nhật thành công!", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(this::loadCategoriesForBrand);
+                            runOnUiThread(() -> Toast.makeText(Category_Admin_Activity.this, "Danh mục đã được cập nhật!", Toast.LENGTH_SHORT).show());
                         }).start();
                     } else {
-                        Toast.makeText(Category_Admin_Activity.this, "Vui lòng điền đầy đủ Tên, Mô tả và chọn ảnh!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Category_Admin_Activity.this, "Vui lòng điền đủ thông tin và chọn ảnh!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-
         builder.create().show();
     }
 
-    // New method to show custom delete confirmation dialog
+    private void deleteCategory(Category category) {
+        new Thread(() -> {
+            database.categoryDao().delete(category);
+            runOnUiThread(this::loadCategoriesForBrand);
+            runOnUiThread(() -> Toast.makeText(Category_Admin_Activity.this, "Danh mục đã được xóa!", Toast.LENGTH_SHORT).show());
+        }).start();
+    }
+
     private void showDeleteConfirmationDialog(Category category) {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_delete_confirmation, null);
-
         TextView dialogTitle = dialogView.findViewById(R.id.dialog_title);
         TextView dialogMessage = dialogView.findViewById(R.id.dialog_message);
         Button buttonCancel = dialogView.findViewById(R.id.button_cancel_delete);
         Button buttonConfirm = dialogView.findViewById(R.id.button_confirm_delete);
-
         dialogTitle.setText("Xác nhận xóa danh mục");
         dialogMessage.setText("Bạn có chắc chắn muốn xóa danh mục: \"" + category.getName() + "\" không?");
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
         final AlertDialog dialog = builder.create();
-
         buttonCancel.setOnClickListener(v -> dialog.dismiss());
-
         buttonConfirm.setOnClickListener(v -> {
             deleteCategory(category);
             dialog.dismiss();
         });
-
         dialog.show();
-    }
-
-    // Delete Category
-    private void deleteCategory(Category category) {
-        new Thread(() -> {
-            database.categoryDao().delete(category);
-            runOnUiThread(() -> Toast.makeText(Category_Admin_Activity.this, "Danh mục đã được xóa!", Toast.LENGTH_SHORT).show());
-        }).start();
     }
 }

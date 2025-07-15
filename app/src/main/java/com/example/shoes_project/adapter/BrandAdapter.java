@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.shoes_project.R;
 import com.example.shoes_project.model.Brand;
 import com.example.shoes_project.ui.admin.BrandDetailActivity; // <-- Bạn cần tạo activity này
+import com.example.shoes_project.ui.admin.Category_Admin_Activity;
 
 import java.util.List;
 
@@ -58,8 +59,16 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
 
         // Bấm toàn item để xem chi tiết
         holder.itemLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), BrandDetailActivity.class);
-            intent.putExtra(BrandDetailActivity.EXTRA_BRAND, brand);
+            Brand currentBrand = brands.get(holder.getAdapterPosition());
+
+            // 2. Tạo Intent để mở màn hình quản lý Category
+            Intent intent = new Intent(v.getContext(), Category_Admin_Activity.class);
+
+            // 3. QUAN TRỌNG: Gửi ID của Brand sang Activity tiếp theo
+            // Key "extra_brand_id" phải khớp với key bạn định nghĩa trong Category_Admin_Activity
+            intent.putExtra(Category_Admin_Activity.EXTRA_BRAND_ID, currentBrand.getId());
+
+            // 4. Khởi động Activity
             v.getContext().startActivity(intent);
         });
 
@@ -103,4 +112,6 @@ public class BrandAdapter extends RecyclerView.Adapter<BrandAdapter.BrandViewHol
         void onEditBrand(Brand brand);
         void onDeleteBrand(Brand brand);
     }
+
+
 }
