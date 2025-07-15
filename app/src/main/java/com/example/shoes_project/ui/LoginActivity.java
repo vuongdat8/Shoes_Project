@@ -318,16 +318,40 @@ public class LoginActivity extends AppCompatActivity {
         /* 2. Room DB -------------------------------------------------- */
         userDao = AppDatabase.getInstance(this).userDao();
         executor.execute(() -> {
-            if (userDao.countUsers() == 0) {
+            if (userDao.countUsers() == 1) {
+
+                userDao.insert(new User(
+                        "Nguyen Nam Anh Tuan",
+                        "tuan@example.com",
+                        "123456",
+                        false     // user
+                ));
+                userDao.insert(new User(
+                        "Vuong Van Dat",
+                        "dat@example.com",
+                        "123456",
+                        false     // user
+                ));
                 userDao.insert(new User(
                         "Nguyen Duc Trung",
-                        "ninjaanhem@email.com",
+                        "trung@example.com",
                         "123456",
-                        true // admin mẫu
+                        false     // user
+                ));
+                userDao.insert(new User(
+                        "admin2",
+                        "ad2@example.com",
+                        "123456",
+                        true      // admin thứ 2 (theo yêu cầu có 1 admin trong 5)
+                ));
+                userDao.insert(new User(
+                        "Do Dai Loc",
+                        "loc@example.com",
+                        "123456",
+                        false     // user
                 ));
             }
         });
-
         /* 3. Remember me ---------------------------------------------- */
         SharedPreferences spLogin = getSharedPreferences(PREF_LOGIN, MODE_PRIVATE);
         String savedEmail = spLogin.getString(KEY_REMEMBER, null);

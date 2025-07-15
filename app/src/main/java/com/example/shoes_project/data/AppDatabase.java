@@ -44,9 +44,8 @@ public abstract class AppDatabase extends RoomDatabase {
                                     AppDatabase.class,
                                     "app_db"
                             )
-                            .fallbackToDestructiveMigration()  // ⚠ Xoá DB cũ khi schema đổi
-                            .addCallback(sRoomDatabaseCallback) // THÊM DÒNG NÀY
-                            .allowMainThreadQueries()          // Chỉ dùng khi testing (có thể bỏ đi nếu dùng ExecutorService)
+                            .fallbackToDestructiveMigration()  // ⚠ Xoá DB cũ khi schema đổi// THÊM DÒNG NÀY
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
@@ -55,25 +54,5 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     // Callback để chèn dữ liệu khi DB được tạo
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
 
-            // Chèn dữ liệu trong một luồng nền
-            databaseWriteExecutor.execute(() -> {
-                UserDao dao = INSTANCE.userDao();
-
-                // Kiểm tra xem có người dùng nào chưa, nếu chưa thì thêm
-                // (Điều này giúp tránh thêm trùng lặp nếu bạn chạy lại ứng dụng mà không xóa DB)
-                if (dao.countUsers() == 0) {
-                    dao.insert(new User("Tuấn", "tuan@example.com", "123456", false)); // false = khách hàng
-                    dao.insert(new User("Huy", "huy@example.com", "123456", false));
-                    dao.insert(new User("Đạt", "dat@example.com", "123456", false));
-                    dao.insert(new User("Lộc", "loc@example.com", "123456", false));
-                    dao.insert(new User("Admin", "admin@example.com", "admin123", true)); // Ví dụ thêm 1 admin
-                }
-            });
-        }
-    };
 }
