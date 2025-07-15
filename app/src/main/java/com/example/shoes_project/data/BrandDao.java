@@ -25,5 +25,9 @@ public interface BrandDao {
 
     @Query("SELECT * FROM brand ")
     LiveData<List<Brand>> getAllBrand();
+    @Query("SELECT * FROM brand WHERE id = :brandId")
+    Brand getBrandById(int brandId);
 
+    @Query("SELECT COUNT(*) FROM brand")
+    LiveData<Integer> getBrandCount();
 }

@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.example.shoes_project.model.Category;
@@ -25,4 +26,9 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM category")
     LiveData<List<Category>> getAllCategories();
+
+
+    @Transaction
+    @Query("SELECT * FROM category WHERE brandId = :brandId")
+    List<Category> getCategoriesForBrand(int brandId);
 }

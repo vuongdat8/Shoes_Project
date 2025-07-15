@@ -18,10 +18,10 @@ public class Brand implements Serializable {
     private String createdAt;
     private String updatedAt;
 
-    // Constructor mặc định - Room sử dụng
-    public Brand() {
-    }
 
+    public Brand() {
+        // Constructor rỗng mà Room sẽ sử dụng
+    }
     // Constructor tùy chỉnh - dùng để thêm mới (không dùng bởi Room)
     @Ignore
     public Brand(String name, String description, String imageUrl, boolean isActive) {

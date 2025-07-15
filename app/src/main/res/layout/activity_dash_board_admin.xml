@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.admin.DashBoard_Admin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/background_image_dashboard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/jota" tools:ignore="ContentDescription"
+            android:scaleType="centerCrop"
+            android:alpha="0.8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/overlay_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@android:color/black"
+            android:alpha="0.3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_dashboard_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bảng điều khiển"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:shadowColor="#000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <TextView
+                android:id="@+id/text_dashboard_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng quan thống kê cửa hàng"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="24dp"
+                android:shadowColor="#000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2" />
+
+            <LinearLayout
+                android:id="@+id/row_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="#80FFFFFF"> <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/text_product_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="152" />
+
+                    <TextView
+                        android:id="@+id/label_product"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sản phẩm"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_product_count" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_manage_products"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Quản lý"
+                        android:textColor="@android:color/black"
+                        app:strokeColor="@android:color/black"
+                        app:rippleColor="#33000000"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/label_product"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="#80FFFFFF"> <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/text_brand_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="14" />
+
+                    <TextView
+                        android:id="@+id/label_brand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hãng"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_brand_count" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_manage_brands"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Quản lý"
+                        android:textColor="@android:color/black"
+                        app:strokeColor="@android:color/black"
+                        app:rippleColor="#33000000"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/label_brand"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/row_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="#80FFFFFF">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/text_category_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="25" />
+
+                        <TextView
+                            android:id="@+id/label_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Danh mục"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/text_category_count" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_manage_categories"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Quản lý"
+                            android:textColor="@android:color/black"
+                            app:strokeColor="@android:color/black"
+                            app:rippleColor="#33000000"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/label_category"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="#80FFFFFF">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/text_order_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="87" />
+
+                        <TextView
+                            android:id="@+id/label_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đơn hàng"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/text_order_count" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_manage_orders"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Quản lý"
+                            android:textColor="@android:color/black"
+                            app:strokeColor="@android:color/black"
+                            app:rippleColor="#33000000"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/label_order"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/row_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="#80FFFFFF">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/text_user_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="50" />
+
+                        <TextView
+                            android:id="@+id/label_user"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Người dùng"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/text_user_count" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_manage_users"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Quản lý"
+                            android:textColor="@android:color/black"
+                            app:strokeColor="@android:color/black"
+                            app:rippleColor="#33000000"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/label_user"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,5 +1,6 @@
 package com.example.shoes_project.data;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -44,12 +45,14 @@ public interface ProductDao {
     @Query("DELETE FROM product")
     void deleteAllProducts();
 
-    @Query("SELECT COUNT(*) FROM product")
-    int getProductCount();
+
 
     @Query("SELECT * FROM product WHERE quantity > 0")
     List<Product> getAvailableProducts();
 
     @Query("SELECT * FROM product WHERE quantity <= :threshold")
     List<Product> getLowStockProducts(int threshold);
+
+    @Query("SELECT COUNT(*) FROM product")
+    LiveData<Integer> getProductCount();
 }

@@ -14,7 +14,7 @@ import com.google.android.material.card.MaterialCardView;
 public class Home_Admin_Activity extends AppCompatActivity {
 
     private MaterialButton btnProfile;
-    private MaterialCardView cardImage1, cardImage2, cardImage3;
+    private MaterialCardView cardImage1, cardImage2, cardImage3, cardImage4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class Home_Admin_Activity extends AppCompatActivity {
         cardImage1 = findViewById(R.id.card_image1);
         cardImage2 = findViewById(R.id.card_image2);
         cardImage3 = findViewById(R.id.card_image3);
+        cardImage4 = findViewById(R.id.card_image4);
 
 
         btnProfile.setOnClickListener(new View.OnClickListener() {
@@ -57,15 +58,24 @@ public class Home_Admin_Activity extends AppCompatActivity {
             }
         });
 
-        // Xử lý sự kiện click cho các card (Card Image 3)
-//        cardImage3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Mở màn hình BrandActivity khi nhấn vào card image 3
-//                Intent intent = new Intent(Home_Admin_Activity.this, Brand_Admin_Activity.class);
-//                startActivity(intent);
-//            }
-//        });
+       //  Xử lý sự kiện click cho các card (Card Image 3)
+        cardImage3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Mở màn hình BrandActivity khi nhấn vào card image 3
+                Intent intent = new Intent(Home_Admin_Activity.this, Customer_List_Activity.class);
+                startActivity(intent);
+            }
+        });
 
+        // Xử lý sự kiện click cho các card (Card Image 4)
+        cardImage4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Mở màn hình CategoryActivity khi nhấn vào card image 2
+                Intent intent = new Intent(Home_Admin_Activity.this, DashBoard_Admin.class);
+                startActivity(intent);
+            }
+        });
     }
 }
