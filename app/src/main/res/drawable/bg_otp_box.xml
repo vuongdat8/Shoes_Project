@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Nền ô -->
+    <solid android:color="@android:color/white" />
+
+    <!-- Bo góc -->
+    <corners android:radius="8dp" />
+
+    <!-- Viền -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/black" />   <!-- đổi sang màu bạn muốn -->
+</shape>
