@@ -1,6 +1,7 @@
 package com.example.shoes_project.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.shoes_project.R;
 import com.example.shoes_project.data.AppDatabase;
+import com.example.shoes_project.model.CartA;
 import com.example.shoes_project.model.Product;
 import com.example.shoes_project.model.ProductWithDetails;
 
@@ -31,7 +33,7 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
     private AppDatabase database;
     private Product currentProduct;
     private int productId;
-
+    private ImageButton btnCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
         viewStockIndicator = findViewById(R.id.view_stock_indicator);
         btnAddToCart = findViewById(R.id.btn_add_to_cart);
         btnBuyNow = findViewById(R.id.btn_buy_now);
-    }
+        btnCart = findViewById(R.id.btn_cart);}
 
     private void initDatabase() {
         database = AppDatabase.getInstance(this);
@@ -233,17 +235,51 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Product is out of stock", Toast.LENGTH_SHORT).show();
             }
         });
+        btnCart.setOnClickListener(v -> {
+            Intent intent = new Intent(CustomerProductDetailActivity.this, CartActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void addToCart() {
-        // TODO: Implement cart functionality
-        // For now, just show a success message
-        Toast.makeText(this, "Added to cart: " + currentProduct.getProductName(), Toast.LENGTH_SHORT).show();
+        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
+        int userId = prefs.getInt("userId", -1);
 
-        // You can implement cart logic here:
-        // 1. Add product to cart database/shared preferences
-        // 2. Update cart count in UI
-        // 3. Show cart icon with badge
+
+        if (userId == -1) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Double selectedSize = currentProduct.getSize();
+        String selectedColor = currentProduct.getColor();
+
+        new Thread(() -> {
+            // Kiểm tra sản phẩm đã tồn tại chưa
+            CartA existing = database.cartADao().getExistingCartA(userId, currentProduct.getId(), selectedColor, selectedSize);
+            if (existing != null) {
+                existing.setQuantity(existing.getQuantity() + 1);
+                database.cartADao().insertCartA(existing);
+            } else {
+                CartA newItem = new CartA(
+                        userId,
+                        currentProduct.getId(),
+                        currentProduct.getProductName(),
+                        currentProduct.getImageUrl(),
+                        currentProduct.getPrice(),
+                        1,
+                        selectedColor,
+                        selectedSize
+                );
+                newItem.setSelected(true);
+                database.cartADao().insertCartA(newItem);
+            }
+
+            runOnUiThread(() -> {
+                Toast.makeText(this, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(CustomerProductDetailActivity.this, CartActivity.class));
+            });
+        }).start();
     }
 
     private void buyNow() {

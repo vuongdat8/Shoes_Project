@@ -117,6 +117,10 @@
             android:name=".ui.admin.Home_Admin_Activity"
             android:exported="false" />
 
+        <activity android:name=".ui.CartActivity"
+            android:exported="false"/>
+        <activity android:name=".ui.CheckoutActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
