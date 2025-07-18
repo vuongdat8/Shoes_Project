@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "650297869084-gcr0pgorbffru6js9f3c361jitgjtvk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shoes_project",
+            "certificate_hash": "a611be5536c5e46bf3d549feeed656b5fc6652d6"
+          }
+        },
+        {
           "client_id": "650297869084-j565htid3gtaqgbjsu8n2r883ei1r8kj.apps.googleusercontent.com",
           "client_type": 3
         }

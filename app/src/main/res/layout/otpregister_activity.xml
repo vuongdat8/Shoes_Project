@@ -4,16 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="@drawable/jota"
     tools:context=".ui.OtpRegisterActivity">
+    <ImageView
+        android:id="@+id/bg_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/jota"
+        android:alpha="0.8"
+        android:contentDescription="Background" />
 
-    <!-- translucent overlay -->
+    <!-- Lớp 2: Overlay màu mờ giúp nội dung dễ nhìn -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/my_primary"
-        android:alpha="0.7" />
-
+        android:alpha="0.5" />
     <!-- Logo & app name -->
     <LinearLayout
         android:layout_width="match_parent"

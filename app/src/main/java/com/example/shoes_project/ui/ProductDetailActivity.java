@@ -85,9 +85,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvProductName.setText(product.getProductName());
         tvBrand.setText("Brand: " + (brand != null ? brand.getName() : "Unknown"));
         tvCategory.setText("Category: " + (category != null ? category.getName() : "Unknown"));
-        tvPrice.setText("Price: $" + product.getPrice());
+
+        // SỬA: Format giá tiền thống nhất
+        tvPrice.setText(String.format("Price: $%.2f", product.getPrice()));
+        tvSellingPrice.setText(String.format("Selling Price: $%.2f", product.getSellingPrice()));
+
         tvQuantity.setText("Quantity: " + product.getQuantity());
-        tvSellingPrice.setText("Selling Price: $" + product.getSellingPrice());
         tvSize.setText("Size: " + product.getSize());
         tvDescription.setText("Description: " + product.getDescription());
         tvColor.setText("Color: " + product.getColor());
@@ -165,10 +168,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
+
     private void editProduct() {
         if (currentProduct != null) {
-            // Intent to AddEditProductActivity (sửa tên class cho đúng)
-            Intent intent = new Intent(ProductDetailActivity.this, AddEditProductActivity.class);
+            // SỬA: Đổi thành EditProductActivity thay vì AddEditProductActivity
+            Intent intent = new Intent(ProductDetailActivity.this, EditProductActivity.class);
             intent.putExtra("product_id", currentProduct.getId());
             startActivityForResult(intent, 100); // Request code 100 for edit
         }
