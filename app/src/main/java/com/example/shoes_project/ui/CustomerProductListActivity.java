@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,12 +52,27 @@ public class CustomerProductListActivity extends AppCompatActivity {
         Button btnProfile = findViewById(R.id.btn_profile);
         btnProfile.setOnClickListener(v -> openProfileScreen());
         initViews();
+        ImageButton btnCart = findViewById(R.id.btn_cart);
+        btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCartScreen();
+            }
+        });
+
         initDatabase();
         loadProducts();
         setupRecyclerView();
         setupSpinners();
         setupSearchListener();
     }
+
+    private void openCartScreen() {
+        Intent intent = new Intent(this, CartActivity.class); // thay CartActivity bằng đúng tên class nếu bạn đặt khác
+        intent.putExtra("email", currentEmail); // nếu bạn cần truyền email
+        startActivity(intent);
+    }
+
 
     private void initViews() {
         recyclerView = findViewById(R.id.rv_products);

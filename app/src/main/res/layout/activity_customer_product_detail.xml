@@ -34,7 +34,13 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF" />
-
+            <ImageButton
+                android:id="@+id/btn_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_cart"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Cart" />
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
