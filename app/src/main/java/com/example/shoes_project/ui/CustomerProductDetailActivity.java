@@ -110,7 +110,7 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
         tvBrand.setText(details.brand != null ? details.brand.getName() : "Unknown Brand");
         tvCategory.setText(details.category != null ? details.category.getName() : "Unknown Category");
 
-        tvPrice.setText("$" + String.format("%.2f", product.getPrice()));
+        tvPrice.setText("$" + String.format("%.3f", product.getPrice()));
         tvSize.setText(String.valueOf(product.getSize()));
         tvColor.setText(product.getColor());
         tvDescription.setText(product.getDescription());
@@ -118,11 +118,11 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
 
         // Original price & discount
         if (product.getSellingPrice() != product.getPrice()) {
-            tvOriginalPrice.setText("$" + String.format("%.2f", (double) product.getSellingPrice()));
+            tvOriginalPrice.setText("$" + String.format("%.0f", (double) product.getSellingPrice()));
             tvOriginalPrice.setVisibility(View.VISIBLE);
             tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG);
 
-            double discountPercent = ((product.getSellingPrice() - product.getPrice()) / product.getSellingPrice()) * 100;
+            double discountPercent = ((product.getSellingPrice() - product.getPrice()) / product.getSellingPrice()) * 1;
             tvDiscountBadge.setText(String.format("%.0f%% OFF", discountPercent));
             tvDiscountBadge.setVisibility(View.VISIBLE);
         } else {

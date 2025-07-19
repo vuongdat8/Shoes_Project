@@ -7,6 +7,21 @@
     android:background="@drawable/bg"
     tools:context=".ui.RegisterActivity">
 
+    <ImageView
+        android:id="@+id/bg_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/jota"
+        android:alpha="0.8"
+        android:contentDescription="Background" />
+
+    <!-- Lớp 2: Overlay màu mờ giúp nội dung dễ nhìn -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/my_primary"
+        android:alpha="0.5" />
     <!-- Lớp phủ mờ màu primary -->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,22 +36,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_above="@id/card_view"
-        android:padding="28dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/location_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="GO MAP"
-            android:textColor="@color/white"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+        android:padding="28dp"/>
 
     <!-- Card chứa form đăng ký -->
     <androidx.cardview.widget.CardView

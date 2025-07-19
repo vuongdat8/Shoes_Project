@@ -218,7 +218,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         private void setupSizeSpinner(CartA cartA) {
             List<Double> sizes = cartViewModel.getAvailableSizes(cartA.getProductId());
             if (sizes == null || sizes.isEmpty()) {
-                sizes = Arrays.asList(38.0, 39.0, 40.0, 41.0);
+
+                sizes = Arrays.asList(39.5, 40.0, 41.0,41.5,42.0,42.5,43.0);  // fallback
+
             }
 
             ArrayAdapter<Double> sizeAdapter = new ArrayAdapter<>(context,

@@ -6,13 +6,21 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     tools:context=".ui.OtpActivity">
+    <ImageView
+        android:id="@+id/bg_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/jota"
+        android:alpha="0.8"
+        android:contentDescription="Background" />
 
-    <!-- translucent overlay -->
+    <!-- Lớp 2: Overlay màu mờ giúp nội dung dễ nhìn -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/my_primary"
-        android:alpha="0.7" />
+        android:alpha="0.5" />
 
     <!-- Logo & app name -->
     <LinearLayout
@@ -31,11 +39,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
             android:text="Shoes Store"
             android:textColor="@color/white"
             android:textSize="32sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- CardView with OTP form -->

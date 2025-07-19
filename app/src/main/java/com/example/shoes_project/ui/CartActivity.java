@@ -81,7 +81,7 @@ public class CartActivity extends AppCompatActivity {
 
         cartViewModel.getTotalPrice().observe(this, totalPrice -> {
             if (totalPrice != null) {
-                tvTotalPrice.setText(String.format("%.0f VND", totalPrice));
+                tvTotalPrice.setText(String.format("%.3f VND", totalPrice));
             }
         });
 
