@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +25,8 @@ import java.io.InputStream;
 import java.util.UUID;
 
 public class EditProductActivity extends AppCompatActivity {
+    private static final String TAG = "EditProductActivity";
+
     private TextInputEditText etProductName, etBrand, etCategory, etPrice,
             etSellingPrice, etQuantity, etSize, etColor, etDescription;
     private ImageView ivProductPreview;
@@ -31,8 +34,8 @@ public class EditProductActivity extends AppCompatActivity {
     private AppDatabase database;
     private Product currentProduct;
     private int productId;
-    private String selectedImagePath; // Lưu đường dẫn ảnh mới được chọn
-    private boolean isImageChanged = false; // Kiểm tra xem ảnh có được thay đổi không
+    private String selectedImagePath;
+    private boolean isImageChanged = false;
 
     // ActivityResultLauncher để chọn ảnh
     private ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
@@ -70,7 +73,7 @@ public class EditProductActivity extends AppCompatActivity {
         ivProductPreview = findViewById(R.id.iv_product_preview);
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.btn_cancel);
-        btnChangeImage = findViewById(R.id.btn_change_image); // Thêm button này trong layout
+        btnChangeImage = findViewById(R.id.btn_change_image);
     }
 
     private void initDatabase() {
@@ -90,7 +93,8 @@ public class EditProductActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (currentProduct != null) {
                         populateFields(currentProduct, brand, category);
-                        selectedImagePath = currentProduct.getImageUrl(); // Khởi tạo với ảnh hiện tại
+                        selectedImagePath = currentProduct.getImageUrl();
+                        Log.d(TAG, "Product loaded: " + currentProduct.getProductName());
                     }
                 });
             }).start();
@@ -160,11 +164,7 @@ public class EditProductActivity extends AppCompatActivity {
     private void setupButtonListeners() {
         btnSave.setOnClickListener(v -> saveProduct());
         btnCancel.setOnClickListener(v -> finish());
-
-        // Thêm listener cho button thay đổi ảnh
         btnChangeImage.setOnClickListener(v -> openImagePicker());
-
-        // Hoặc có thể click vào ảnh để thay đổi
         ivProductPreview.setOnClickListener(v -> openImagePicker());
     }
 
@@ -201,35 +201,86 @@ public class EditProductActivity extends AppCompatActivity {
             }
 
             // Cập nhật đường dẫn ảnh mới
-            selectedImagePath = fileName; // Lưu relative path
+            selectedImagePath = fileName;
             isImageChanged = true;
 
             Toast.makeText(this, "Image selected successfully", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             Toast.makeText(this, "Error selecting image", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            Log.e(TAG, "Error selecting image", e);
         }
     }
 
     private void saveProduct() {
         if (validateInputs()) {
-            updateProductFromInputs();
-
             new Thread(() -> {
                 try {
+                    Log.d(TAG, "Before update: " + currentProduct.getProductName());
+                    updateProductFromInputs();
+                    Log.d(TAG, "After update: " + currentProduct.getProductName());
+
                     database.productDao().updateProduct(currentProduct);
+                    Log.d(TAG, "Product updated in database");
+
                     runOnUiThread(() -> {
                         Toast.makeText(EditProductActivity.this, "Product updated successfully", Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
                     });
                 } catch (Exception e) {
+                    Log.e(TAG, "Error updating product", e);
                     runOnUiThread(() -> {
-                        Toast.makeText(EditProductActivity.this, "Error updating product", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProductActivity.this, "Error updating product: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     });
                 }
             }).start();
+        }
+    }
+
+    // THÊM METHOD TÌM HOẶC TẠO BRAND
+    private int findOrCreateBrand(String brandName) {
+        try {
+            // Tìm brand theo tên
+            Brand existingBrand = database.brandDao().getBrandByName(brandName);
+            if (existingBrand != null) {
+                Log.d(TAG, "Found existing brand: " + brandName + " with ID: " + existingBrand.getId());
+                return existingBrand.getId();
+            } else {
+                // Tạo brand mới nếu không tìm thấy
+                Brand newBrand = new Brand();
+                newBrand.setName(brandName);
+                long newBrandId = database.brandDao().insertBrand(newBrand);
+                Log.d(TAG, "Created new brand: " + brandName + " with ID: " + newBrandId);
+                return (int) newBrandId;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error finding/creating brand", e);
+            // Trả về ID hiện tại nếu có lỗi
+            return currentProduct.getBrandId();
+        }
+    }
+
+    // THÊM METHOD TÌM HOẶC TẠO CATEGORY
+    private int findOrCreateCategory(String categoryName) {
+        try {
+            // Tìm category theo tên
+            Category existingCategory = database.categoryDao().getCategoryByName(categoryName);
+            if (existingCategory != null) {
+                Log.d(TAG, "Found existing category: " + categoryName + " with ID: " + existingCategory.getId());
+                return existingCategory.getId();
+            } else {
+                // Tạo category mới nếu không tìm thấy
+                Category newCategory = new Category();
+                newCategory.setName(categoryName);
+                long newCategoryId = database.categoryDao().insertCategory(newCategory);
+                Log.d(TAG, "Created new category: " + categoryName + " with ID: " + newCategoryId);
+                return (int) newCategoryId;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error finding/creating category", e);
+            // Trả về ID hiện tại nếu có lỗi
+            return currentProduct.getCategoryId();
         }
     }
 
@@ -357,10 +408,19 @@ public class EditProductActivity extends AppCompatActivity {
 
     private void updateProductFromInputs() {
         currentProduct.setProductName(etProductName.getText().toString().trim());
-        currentProduct.setBrandId(Integer.parseInt(etBrand.getText().toString().trim()));
-        currentProduct.setCategoryId(Integer.parseInt(etCategory.getText().toString().trim()));
+
+        // XỬ LÝ BRAND - Tìm hoặc tạo mới brand
+        String brandName = etBrand.getText().toString().trim();
+        int brandId = findOrCreateBrand(brandName);
+        currentProduct.setBrandId(brandId);
+
+        // XỬ LÝ CATEGORY - Tìm hoặc tạo mới category
+        String categoryName = etCategory.getText().toString().trim();
+        int categoryId = findOrCreateCategory(categoryName);
+        currentProduct.setCategoryId(categoryId);
+
         currentProduct.setPrice(Double.parseDouble(etPrice.getText().toString().trim()));
-        currentProduct.setSellingPrice(Double.parseDouble(etSellingPrice.getText().toString().trim())); // Sửa lại thành Double
+        currentProduct.setSellingPrice(Double.parseDouble(etSellingPrice.getText().toString().trim()));
         currentProduct.setQuantity(Integer.parseInt(etQuantity.getText().toString().trim()));
         currentProduct.setSize(Double.parseDouble(etSize.getText().toString().trim()));
         currentProduct.setColor(etColor.getText().toString().trim());
@@ -370,5 +430,8 @@ public class EditProductActivity extends AppCompatActivity {
         if (isImageChanged) {
             currentProduct.setImageUrl(selectedImagePath);
         }
+
+        Log.d(TAG, "Product updated with: " + currentProduct.getProductName() +
+                ", Brand ID: " + brandId + ", Category ID: " + categoryId);
     }
 }

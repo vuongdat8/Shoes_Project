@@ -84,16 +84,18 @@
             app:strokeColor="@color/white"
             app:strokeWidth="1dp"
             app:cardBackgroundColor="#80FFFFFF">
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:hint="Search products..."
-                app:hintTextColor="#666666"
-                app:boxBackgroundMode="none">
+                app:boxBackgroundMode="none"
+                app:hintTextColor="#666666">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_search"
                     android:layout_width="match_parent"
-                    android:layout_height="34dp"
+                    android:layout_height="69dp"
                     android:background="@android:color/transparent"
                     android:drawableEnd="@android:drawable/ic_search_category_default"
                     android:drawablePadding="8dp"

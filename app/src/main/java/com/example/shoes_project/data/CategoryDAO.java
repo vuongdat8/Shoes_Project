@@ -18,6 +18,10 @@ public interface CategoryDAO {
     @Insert
     void insert(Category category);
 
+    // THÊM METHOD TRẢ VỀ ID KHI INSERT
+    @Insert
+    long insertCategory(Category category);
+
     @Update
     void update(Category category);
 
@@ -26,9 +30,13 @@ public interface CategoryDAO {
 
     @Query("SELECT * FROM category")
     LiveData<List<Category>> getAllCategories();
+
     @Query("SELECT * FROM category WHERE id = :categoryId")
     Category getCategoryById(int categoryId);
 
+    // THÊM METHOD TÌM CATEGORY THEO TÊN
+    @Query("SELECT * FROM category WHERE name = :name LIMIT 1")
+    Category getCategoryByName(String name);
 
     @Transaction
     @Query("SELECT * FROM category WHERE brandId = :brandId")

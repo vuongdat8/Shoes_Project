@@ -68,7 +68,13 @@
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="20dp">
-
+            <ImageView
+                android:id="@+id/icon_brand_small"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="Biểu tượng thương hiệu nhỏ"
+                android:scaleType="fitCenter" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,21 +88,9 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/icon_brand_small"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="24dp"
-                android:contentDescription="Biểu tượng thương hiệu nhỏ"
-                android:scaleType="fitCenter" />
 
-            <ImageView
-                android:id="@+id/detail_brand_image"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_marginBottom="24dp"
-                android:contentDescription="Brand Detail Image"
-                android:scaleType="centerCrop" />
+
+
 
             <TextView
                 android:id="@+id/detail_brand_name"
@@ -153,6 +147,13 @@
                 android:text="Ngày cập nhật: 2023-10-26 14:00:00"
                 android:textColor="#99FFFFFF"
                 android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/detail_brand_image"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="Brand Detail Image"
+                android:scaleType="centerCrop" />
 
             <Button
                 android:id="@+id/btn_edit_brand"

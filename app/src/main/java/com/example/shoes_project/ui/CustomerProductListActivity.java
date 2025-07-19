@@ -36,8 +36,11 @@ public class CustomerProductListActivity extends AppCompatActivity {
     private CustomerProductAdapter productAdapter;
 
     private RecyclerView recyclerView;
-    private EditText etSearch;
+    private TextInputEditText etSearch; // ĐỔI THÀNH TextInputEditText
     private Spinner spinnerCategory, spinnerBrand;
+    private Button btnClearFilter; // THÊM BUTTON CLEAR FILTER
+    private TextView tvProductCount; // THÊM PRODUCT COUNT
+    private LinearLayout layoutNoProducts; // THÊM NO PRODUCTS LAYOUT
     private String currentEmail;
     private List<ProductWithDetails> allProducts = new ArrayList<>();
     private List<ProductWithDetails> filteredProducts = new ArrayList<>();
@@ -65,20 +68,29 @@ public class CustomerProductListActivity extends AppCompatActivity {
         setupRecyclerView();
         setupSpinners();
         setupSearchListener();
+        setupClearFilter(); // THÊM SETUP CLEAR FILTER
     }
 
     private void openCartScreen() {
-        Intent intent = new Intent(this, CartActivity.class); // thay CartActivity bằng đúng tên class nếu bạn đặt khác
-        intent.putExtra("email", currentEmail); // nếu bạn cần truyền email
+        Intent intent = new Intent(this, CartActivity.class);
+        intent.putExtra("email", currentEmail);
         startActivity(intent);
     }
 
-
     private void initViews() {
         recyclerView = findViewById(R.id.rv_products);
+        // SỬA LẠI CÁCH LẤY REFERENCE - SỬ DỤNG TextInputEditText
         etSearch = findViewById(R.id.et_search);
         spinnerCategory = findViewById(R.id.spinner_category);
         spinnerBrand = findViewById(R.id.spinner_brand);
+        btnClearFilter = findViewById(R.id.btn_clear_filter);
+        tvProductCount = findViewById(R.id.tv_product_count);
+        layoutNoProducts = findViewById(R.id.layout_no_products);
+
+        // KIỂM TRA NULL
+        if (etSearch == null) {
+            throw new RuntimeException("Search EditText not found! Check your layout XML.");
+        }
     }
 
     private void initDatabase() {
@@ -94,11 +106,9 @@ public class CustomerProductListActivity extends AppCompatActivity {
         productAdapter = new CustomerProductAdapter(this, filteredProducts);
         recyclerView.setAdapter(productAdapter);
 
-        // THÊM CLICK LISTENER CHO ADAPTER
         productAdapter.setOnProductClickListener(new CustomerProductAdapter.OnProductClickListener() {
             @Override
             public void onProductClick(Product product) {
-                // Mở trang chi tiết sản phẩm
                 openProductDetailScreen(product);
             }
         });
@@ -136,17 +146,21 @@ public class CustomerProductListActivity extends AppCompatActivity {
         spinnerBrand.setAdapter(brandAdapter);
 
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
                 filterProducts();
             }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         spinnerBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
                 filterProducts();
             }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         // Initial filter
@@ -154,17 +168,64 @@ public class CustomerProductListActivity extends AppCompatActivity {
     }
 
     private void setupSearchListener() {
+        // THÊM LOG ĐỂ DEBUG
+        android.util.Log.d("SearchDebug", "Setting up search listener");
+
         etSearch.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                android.util.Log.d("SearchDebug", "beforeTextChanged: " + s);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                android.util.Log.d("SearchDebug", "onTextChanged: " + s);
                 filterProducts();
             }
-            @Override public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                android.util.Log.d("SearchDebug", "afterTextChanged: " + s);
+            }
+        });
+
+        // THÊM FOCUS LISTENER ĐỂ DEBUG
+        etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                android.util.Log.d("SearchDebug", "Focus changed: " + hasFocus);
+            }
         });
     }
 
+    // THÊM METHOD SETUP CLEAR FILTER
+    private void setupClearFilter() {
+        if (btnClearFilter != null) {
+            btnClearFilter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clearFilters();
+                }
+            });
+        }
+    }
+
+    // THÊM METHOD CLEAR FILTERS
+    private void clearFilters() {
+        etSearch.setText("");
+        spinnerCategory.setSelection(0);
+        spinnerBrand.setSelection(0);
+        filterProducts();
+    }
+
     private void filterProducts() {
-        String query = etSearch.getText().toString().trim().toLowerCase();
+        String query = "";
+        if (etSearch != null && etSearch.getText() != null) {
+            query = etSearch.getText().toString().trim().toLowerCase();
+        }
+
+        android.util.Log.d("SearchDebug", "Filtering with query: '" + query + "'");
+
         String selectedCategory = getSafeSpinnerValue(spinnerCategory, "All Categories");
         String selectedBrand = getSafeSpinnerValue(spinnerBrand, "All Brands");
 
@@ -191,6 +252,31 @@ public class CustomerProductListActivity extends AppCompatActivity {
         }
 
         productAdapter.updateProductList(filteredProducts);
+        updateProductCount(); // CẬP NHẬT PRODUCT COUNT
+        updateNoProductsVisibility(); // CẬP NHẬT NO PRODUCTS MESSAGE
+
+        android.util.Log.d("SearchDebug", "Found " + filteredProducts.size() + " products");
+    }
+
+    // THÊM METHOD CẬP NHẬT PRODUCT COUNT
+    private void updateProductCount() {
+        if (tvProductCount != null) {
+            String countText = "Showing " + filteredProducts.size() + " products";
+            tvProductCount.setText(countText);
+        }
+    }
+
+    // THÊM METHOD CẬP NHẬT NO PRODUCTS VISIBILITY
+    private void updateNoProductsVisibility() {
+        if (layoutNoProducts != null && recyclerView != null) {
+            if (filteredProducts.isEmpty()) {
+                layoutNoProducts.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                layoutNoProducts.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private String getSafeSpinnerValue(Spinner spinner, String defaultValue) {
@@ -208,7 +294,6 @@ public class CustomerProductListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // THÊM METHOD MỚI ĐỂ MỞ TRANG CHI TIẾT SẢN PHẨM
     private void openProductDetailScreen(Product product) {
         Intent intent = new Intent(this, CustomerProductDetailActivity.class);
         intent.putExtra("product_id", product.getId());

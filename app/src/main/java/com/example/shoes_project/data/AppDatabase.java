@@ -75,7 +75,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     dao.insert(new User("Huy", "huy@example.com", "123456", false));
                     dao.insert(new User("Đạt", "dat@example.com", "123456", false));
                     dao.insert(new User("Lộc", "loc@example.com", "123456", false));
-                    dao.insert(new User("Admin", "admin@example.com", "admin123", true)); // Ví dụ thêm 1 admin
+                    dao.insert(new User("Admin", "admin@example.com", "123456", true)); // Ví dụ thêm 1 admin
                 }
             });
         }
