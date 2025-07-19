@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shoes_project.R;
 import com.example.shoes_project.adapter.CartAdapter;
+import com.example.shoes_project.data.AppDatabase;
 import com.example.shoes_project.model.CartA;
 import com.example.shoes_project.model.Product;
 
@@ -34,12 +35,12 @@ public class CartActivity extends AppCompatActivity {
     private Button btnCheckout, btnDeleteSelected;
     private CheckBox cbSelectAll;
     private int currentUserId;
-
+    private AppDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
+        database = AppDatabase.getInstance(this);
         initViews();
         setupViewModel();
         setupRecyclerView();
@@ -111,44 +112,57 @@ public class CartActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnCheckout.setOnClickListener(v -> {
-            // Lấy data từ ViewModel thay vì adapter
             List<CartA> allItems = cartViewModel.getCartAs().getValue();
-            ArrayList<Product> products = new ArrayList<>();
+            ArrayList<Integer> productIds = new ArrayList<>();
+            ArrayList<String> productNames = new ArrayList<>();
+            ArrayList<String> imageUrls = new ArrayList<>();
+            ArrayList<Double> prices = new ArrayList<>();
             ArrayList<Integer> quantities = new ArrayList<>();
+            ArrayList<String> colors = new ArrayList<>();
+            ArrayList<Double> sizes = new ArrayList<>();
 
             if (allItems != null) {
+                int selectedCount = 0;
                 for (CartA item : allItems) {
                     if (item.isSelected()) {
-                        Product product = new Product();
-                        product.setId(item.getProductId());
-                        product.setProductName(item.getProductName());
-                        product.setPrice(item.getPrice());
-                        product.setSellingPrice(item.getPrice()); // Nếu chưa có trường riêng
-                        product.setImageUrl(item.getImageUrl());
-                        product.setSize(item.getSelectedSize());
-                        product.setDescription(""); // chưa có trong CartA → để trống
-                        product.setColor(item.getSelectedColor());
-                        product.setBrandId(0); // chưa có trong CartA → gán tạm
-                        product.setCategoryId(0); // chưa có trong CartA → gán tạm
-
-
-                        products.add(product);
+                        selectedCount++;
+                        productIds.add(item.getProductId());
+                        productNames.add(item.getProductName());
+                        imageUrls.add(item.getImageUrl());
+                        prices.add(item.getPrice());
                         quantities.add(item.getQuantity());
+                        colors.add(item.getSelectedColor());
+                        sizes.add(item.getSelectedSize());
+                        Log.d("CartActivity", "Selected size for item " + item.getProductName() + ": " + item.getSelectedSize());
+
+                        Log.d("CartActivity", "Selected item: " + item.getProductName() + ", ID: " + item.getProductId());
                     }
                 }
+                Log.d("CartActivity", "Total selected items: " + selectedCount);
+            } else {
+                Log.e("CartActivity", "Cart items list is null");
             }
 
-            if (!products.isEmpty()) {
+            if (!productIds.isEmpty()) {
                 Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
-                intent.putExtra("selected_products", products);
-                intent.putExtra("quantities", quantities);
+                intent.putIntegerArrayListExtra("product_ids", productIds);
+                intent.putStringArrayListExtra("product_names", productNames);
+                intent.putStringArrayListExtra("product_image_urls", imageUrls);
+                intent.putExtra("product_prices", prices);                intent.putIntegerArrayListExtra("quantities", quantities);
+                intent.putStringArrayListExtra("selected_colors", colors);
+                intent.putExtra("selected_sizes", sizes);
+                intent.putExtra("user_id", currentUserId);
+                Log.d("CartActivity", "Starting CheckoutActivity with " + productIds.size() + " products");
                 startActivity(intent);
+                Toast.makeText(this, "Đang chuyển đến trang thanh toán...", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Vui lòng chọn sản phẩm để thanh toán", Toast.LENGTH_SHORT).show();
+                Log.w("CartActivity", "No products selected for checkout");
             }
         });
-    }
 
+        btnDeleteSelected.setOnClickListener(v -> showDeleteConfirmDialog());
+    }
     private void showDeleteConfirmDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Xóa sản phẩm")

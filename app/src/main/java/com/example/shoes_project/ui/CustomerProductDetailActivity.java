@@ -19,6 +19,10 @@ import com.example.shoes_project.model.Product;
 import com.example.shoes_project.model.ProductWithDetails;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CustomerProductDetailActivity extends AppCompatActivity {
     private ImageButton btnBack;
@@ -233,6 +237,7 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
                 buyNow();
             } else {
                 Toast.makeText(this, "Product is out of stock", Toast.LENGTH_SHORT).show();
+
             }
         });
         btnCart.setOnClickListener(v -> {
@@ -283,21 +288,45 @@ public class CustomerProductDetailActivity extends AppCompatActivity {
     }
 
     private void buyNow() {
-        // TODO: Implement purchase flow
-        // For now, show a message and navigate to checkout
-        Toast.makeText(this, "Proceeding to checkout...", Toast.LENGTH_SHORT).show();
+        SharedPreferences prefs = getSharedPreferences("auth", MODE_PRIVATE);
+        int userId = prefs.getInt("userId", -1);
 
-        // You can implement purchase logic here:
-        // 1. Navigate to checkout activity
-        // 2. Pass product information
-        // 3. Handle payment processing
+        if (userId == -1) {
+            Toast.makeText(this, "Người dùng chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // Example navigation to checkout:
-        // Intent intent = new Intent(this, CheckoutActivity.class);
-        // intent.putExtra("product_id", currentProduct.getId());
-        // intent.putExtra("quantity", 1);
-        // startActivity(intent);
+        // Prepare the current product as a "single-item cart"
+        ArrayList<Integer> productIds = new ArrayList<>();
+        ArrayList<String> productNames = new ArrayList<>();
+        ArrayList<String> imageUrls = new ArrayList<>();
+        ArrayList<Double> prices = new ArrayList<>();
+        ArrayList<Integer> quantities = new ArrayList<>();
+        ArrayList<String> colors = new ArrayList<>();
+        ArrayList<Double> sizes = new ArrayList<>();
+
+        productIds.add(currentProduct.getId());
+        productNames.add(currentProduct.getProductName());
+        imageUrls.add(currentProduct.getImageUrl());
+        prices.add(currentProduct.getPrice());
+        quantities.add(1); // Default quantity = 1
+        colors.add(currentProduct.getColor());
+        sizes.add(currentProduct.getSize());
+
+        Intent intent = new Intent(CustomerProductDetailActivity.this, CheckoutActivity.class);
+        intent.putIntegerArrayListExtra("product_ids", productIds);
+        intent.putStringArrayListExtra("product_names", productNames);
+        intent.putStringArrayListExtra("product_image_urls", imageUrls);
+        intent.putExtra("product_prices", prices);
+        intent.putIntegerArrayListExtra("quantities", quantities);
+        intent.putStringArrayListExtra("selected_colors", colors);
+        intent.putExtra("selected_sizes", sizes);
+
+        startActivity(intent);
+        Toast.makeText(this, "Đang chuyển đến trang thanh toán...", Toast.LENGTH_SHORT).show();
     }
+
+
 
     @Override
     protected void onResume() {
