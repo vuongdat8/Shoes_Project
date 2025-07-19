@@ -2,6 +2,8 @@ package com.example.shoes_project.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -11,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +27,7 @@ import com.example.shoes_project.model.OrderItem;
 import com.example.shoes_project.model.Product;
 import com.example.shoes_project.data.OrderRepository;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +53,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private double subtotal = 0;
     private double shippingFee = 30000;
     private double totalAmount = 0;
-
+    private static final int REQUEST_MAP_PICKER = 1001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +66,44 @@ public class CheckoutActivity extends AppCompatActivity {
         calculateTotals();
         setupListeners();
     }
+    private void setupListeners() {
+        btnBack.setOnClickListener(v -> finish());
 
+        btnPlaceOrder.setOnClickListener(v -> {
+            if (validateInputs()) {
+                placeOrder();
+            }
+        });
+
+        rgPaymentMethod.setOnCheckedChangeListener((group, checkedId) -> updatePaymentMethod(checkedId));
+
+        findViewById(R.id.btn_select_on_map).setOnClickListener(v -> {
+            Intent intent = new Intent(this, MapPickerActivity.class);
+            startActivityForResult(intent, REQUEST_MAP_PICKER);
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_MAP_PICKER && resultCode == RESULT_OK && data != null) {
+            double lat = data.getDoubleExtra("latitude", 0);
+            double lng = data.getDoubleExtra("longitude", 0);
+
+            // Gọi geocoder để chuyển thành địa chỉ (cần permission INTERNET)
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+                if (!addresses.isEmpty()) {
+                    String address = addresses.get(0).getAddressLine(0);
+                    etCustomerAddress.setText(address);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                etCustomerAddress.setText(lat + ", " + lng); // fallback
+            }
+        }
+    }
     private void initViews() {
         rvCheckoutItems = findViewById(R.id.recycler_view_checkout);
         etCustomerName = findViewById(R.id.et_customer_name);
@@ -212,17 +254,7 @@ public class CheckoutActivity extends AppCompatActivity {
         tvTotalAmount.setText(formatCurrency(totalAmount));
     }
 
-    private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
 
-        btnPlaceOrder.setOnClickListener(v -> {
-            if (validateInputs()) {
-                placeOrder();
-            }
-        });
-
-        rgPaymentMethod.setOnCheckedChangeListener((group, checkedId) -> updatePaymentMethod(checkedId));
-    }
 
     private void updatePaymentMethod(int checkedId) {
         if (checkedId == R.id.rb_cash) {

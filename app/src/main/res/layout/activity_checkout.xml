@@ -155,7 +155,13 @@
                 android:layout_marginBottom="24dp"
                 android:inputType="textMultiLine"
                 android:lines="3" />
-
+            <ImageButton
+                android:id="@+id/btn_select_on_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_mapmode"
+                android:contentDescription="Chọn địa chỉ từ bản đồ"
+                android:background="?attr/selectableItemBackgroundBorderless" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

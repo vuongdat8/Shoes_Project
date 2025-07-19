@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -46,13 +47,16 @@ android {
 }
 
 dependencies {
-    dependencies {
-        implementation ("androidx.room:room-runtime:2.5.1")  // Phiên bản mới nhất của Room
-        annotationProcessor ("androidx.room:room-compiler:2.5.1")
-    }
+
+
+
+
     implementation ("androidx.recyclerview:recyclerview:1.4.0")
     implementation ("androidx.cardview:cardview:1.0.0")
-
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation(libs.play.services.maps)
     /* AndroidX & UI */
     implementation(libs.appcompat)
     implementation(libs.material)
