@@ -10,6 +10,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.shoes_project.model.Brand;
 import com.example.shoes_project.model.CartA;
+import com.example.shoes_project.model.Order;
+import com.example.shoes_project.model.OrderItem;
 import com.example.shoes_project.model.Product;
 import com.example.shoes_project.model.User;
 import com.example.shoes_project.model.Category;
@@ -18,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(
-        entities = {Product.class, User.class, Category.class, Brand.class, CartA.class},
+        entities = {Product.class, User.class, Category.class, Brand.class, CartA.class, Order.class, OrderItem.class},
         version = 4,               // ⬆️ Tăng version mỗi khi đổi schema (đảm bảo là 2 hoặc cao hơn)
         exportSchema = false
 )
@@ -28,6 +30,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CategoryDAO categoryDao();
     public abstract BrandDao brandDao();
     public abstract CartADao cartADao();
+    public abstract OrderDao orderDao();
+    public abstract OrderItemDao orderItemDao();
+
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

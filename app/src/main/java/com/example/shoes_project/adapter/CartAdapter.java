@@ -15,19 +15,24 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.shoes_project.R;
 import com.example.shoes_project.model.CartA;
 import com.example.shoes_project.ui.CartViewModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private List<CartA> CartAs = new ArrayList<>();
+    private List<CartA> cartAs = new ArrayList<>();
     private Context context;
     private CartViewModel cartViewModel;
 
@@ -36,15 +41,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.cartViewModel = cartViewModel;
     }
 
-    public void setCartAs(List<CartA> CartAs) {
-        this.CartAs = CartAs;
-        Log.d("CartAdapter", "Setting cart items: " + CartAs.size());
+    public void setCartAs(List<CartA> cartAs) {
+        this.cartAs = cartAs;
+        Log.d("CartAdapter", "Setting cart items: " + cartAs.size());
         notifyDataSetChanged();
     }
+
     public List<CartA> getSelectedItems() {
         List<CartA> selectedItems = new ArrayList<>();
-        if (CartAs != null) {
-            for (CartA item : CartAs) {
+        if (cartAs != null) {
+            for (CartA item : cartAs) {
                 if (item.isSelected()) {
                     selectedItems.add(item);
                 }
@@ -62,13 +68,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartA CartA = CartAs.get(position);
-        holder.bind(CartA);
+        CartA cartA = cartAs.get(position);
+        holder.bind(cartA);
     }
 
     @Override
     public int getItemCount() {
-        return CartAs.size();
+        return cartAs.size();
     }
 
     class CartViewHolder extends RecyclerView.ViewHolder {
@@ -91,49 +97,94 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             spinnerSize = itemView.findViewById(R.id.spinnerSize);
         }
 
-        public void bind(CartA CartA) {
-            Log.d("CartViewHolder", "Binding item: " + CartA.getProductName() + ", Image URL: " + CartA.getImageUrl());
+        public void bind(CartA cartA) {
+            Log.d("CartViewHolder", "Binding item: " + cartA.getProductName() + ", Image URL: " + cartA.getImageUrl());
+
             // Tải ảnh sản phẩm
-            Glide.with(context)
-                    .load(CartA.getImageUrl())
-                    .placeholder(R.drawable.placeholder_product)
-                    .error(R.drawable.placeholder_product)
-                    .into(ivProduct);
+            loadProductImage(cartA.getImageUrl(), ivProduct);
 
             // Thiết lập thông tin sản phẩm
-            tvProductName.setText(CartA.getProductName());
-            tvPrice.setText(String.format("%.0f VND", CartA.getPrice()));
-            tvQuantity.setText(String.valueOf(CartA.getQuantity()));
+            tvProductName.setText(cartA.getProductName());
+            tvPrice.setText(String.format("%.0f VNĐ", cartA.getPrice()));
+            tvQuantity.setText(String.valueOf(cartA.getQuantity()));
 
             // Thiết lập checkbox
             cbSelect.setOnCheckedChangeListener(null);
-            cbSelect.setChecked(CartA.isSelected());
+            cbSelect.setChecked(cartA.isSelected());
             cbSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                cartViewModel.updateSelection(CartA, isChecked);
+                cartViewModel.updateSelection(cartA, isChecked);
             });
 
             // Thiết lập nút tăng/giảm số lượng
             btnDecrease.setOnClickListener(v -> {
-                if (CartA.getQuantity() > 1) {
-                    cartViewModel.updateQuantity(CartA, CartA.getQuantity() - 1);
+                if (cartA.getQuantity() > 1) {
+                    cartViewModel.updateQuantity(cartA, cartA.getQuantity() - 1);
                 } else {
-                    showDeleteItemDialog(CartA);
+                    showDeleteItemDialog(cartA);
                 }
             });
 
             btnIncrease.setOnClickListener(v -> {
-                cartViewModel.updateQuantity(CartA, CartA.getQuantity() + 1);
+                cartViewModel.updateQuantity(cartA, cartA.getQuantity() + 1);
             });
 
             // Thiết lập spinner màu sắc
-            setupColorSpinner(CartA);
+            setupColorSpinner(cartA);
 
             // Thiết lập spinner kích thước
-            setupSizeSpinner(CartA);
+            setupSizeSpinner(cartA);
         }
+        private void loadProductImage(String imagePath, ImageView imageView) {
+            if (imagePath != null && !imagePath.isEmpty()) {
+                Log.d("CartViewHolder", "Loading image: " + imagePath);
+                if (imagePath.startsWith("http") || imagePath.startsWith("https")) {
+                    // Load image from URL
+                    Glide.with(context)
+                            .load(imagePath)
+                            .placeholder(R.drawable.placeholder_product)
+                            .error(R.drawable.placeholder_product)
+                            .centerCrop()
+                            .into(imageView);
+                } else if (imagePath.startsWith("content://")) {
+                    // Load image from Content URI
+                    Glide.with(context)
+                            .load(imagePath)
+                            .placeholder(R.drawable.placeholder_product)
+                            .error(R.drawable.placeholder_product)
+                            .centerCrop()
+                            .into(imageView);
+                } else {
+                    // Handle file path (both absolute and relative)
+                    File imageFile;
+                    if (imagePath.startsWith("/")) {
+                        // Absolute path
+                        imageFile = new File(imagePath);
+                    } else {
+                        // Relative path - construct full path
+                        imageFile = new File(context.getFilesDir(), imagePath);
+                    }
 
-        private void setupColorSpinner(CartA CartA) {
-            List<String> colors = cartViewModel.getAvailableColors(CartA.getProductId());
+                    if (imageFile.exists()) {
+                        Glide.with(context)
+                                .load(imageFile)
+                                .placeholder(R.drawable.placeholder_product)
+                                .error(R.drawable.placeholder_product)
+                                .centerCrop()
+                                .into(imageView);
+                    } else {
+                        // File doesn't exist, show placeholder
+                        imageView.setImageResource(R.drawable.placeholder_product);
+                        Log.e("CartViewHolder", "Image file not found: " + imageFile.getAbsolutePath());
+                    }
+                }
+            } else {
+                // No image path, show placeholder
+                imageView.setImageResource(R.drawable.placeholder_product);
+                Log.e("CartViewHolder", "Image path is null or empty");
+            }
+        }
+        private void setupColorSpinner(CartA cartA) {
+            List<String> colors = cartViewModel.getAvailableColors(cartA.getProductId());
             if (colors == null || colors.isEmpty()) {
                 colors = Arrays.asList("Đen", "Trắng", "Đỏ", "Xanh");
             }
@@ -144,7 +195,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             spinnerColor.setAdapter(colorAdapter);
 
             // Thiết lập màu đã chọn
-            int colorPosition = colors.indexOf(CartA.getSelectedColor());
+            int colorPosition = colors.indexOf(cartA.getSelectedColor());
             if (colorPosition >= 0) {
                 spinnerColor.setSelection(colorPosition);
             }
@@ -154,8 +205,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String selectedColor = finalColors.get(position);
-                    if (!selectedColor.equals(CartA.getSelectedColor())) {
-                        cartViewModel.updateColor(CartA, selectedColor);
+                    if (!selectedColor.equals(cartA.getSelectedColor())) {
+                        cartViewModel.updateColor(cartA, selectedColor);
                     }
                 }
 
@@ -164,10 +215,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             });
         }
 
-        private void setupSizeSpinner(CartA CartA) {
-            List<Double> sizes = cartViewModel.getAvailableSizes(CartA.getProductId());
+        private void setupSizeSpinner(CartA cartA) {
+            List<Double> sizes = cartViewModel.getAvailableSizes(cartA.getProductId());
             if (sizes == null || sizes.isEmpty()) {
+
                 sizes = Arrays.asList(39.5, 40.0, 41.0,41.5,42.0,42.5,43.0);  // fallback
+
             }
 
             ArrayAdapter<Double> sizeAdapter = new ArrayAdapter<>(context,
@@ -175,7 +228,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerSize.setAdapter(sizeAdapter);
 
-            int sizePosition = sizes.indexOf(CartA.getSelectedSize());
+            int sizePosition = sizes.indexOf(cartA.getSelectedSize());
             if (sizePosition >= 0) {
                 spinnerSize.setSelection(sizePosition);
             }
@@ -185,27 +238,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     Double selectedSize = finalSizes.get(position);
-                    if (!selectedSize.equals(CartA.getSelectedSize())) {
-                        cartViewModel.updateSize(CartA, selectedSize);
+                    if (!selectedSize.equals(cartA.getSelectedSize())) {
+                        cartViewModel.updateSize(cartA, selectedSize);
                     }
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {}
             });
+
         }
 
-
-        private void showDeleteItemDialog(CartA CartA) {
+        private void showDeleteItemDialog(CartA cartA) {
             new AlertDialog.Builder(context)
                     .setTitle("Xóa sản phẩm")
                     .setMessage("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?")
                     .setPositiveButton("Xóa", (dialog, which) -> {
-                        cartViewModel.deleteCartA(CartA);
+                        cartViewModel.deleteCartA(cartA);
                     })
                     .setNegativeButton("Hủy", null)
                     .show();
         }
-
     }
 }

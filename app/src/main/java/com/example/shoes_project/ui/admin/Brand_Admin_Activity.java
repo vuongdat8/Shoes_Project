@@ -59,7 +59,7 @@ public class Brand_Admin_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brand_admin);
-
+        findViewById(R.id.btn_back).setOnClickListener(v -> onBackPressed());
         recyclerView = findViewById(R.id.recycler_view_brand);
         addBrandButton = findViewById(R.id.button_add_brand);
 

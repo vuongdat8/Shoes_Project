@@ -121,6 +121,8 @@
             android:exported="false"/>
         <activity android:name=".ui.CheckoutActivity"
             android:exported="false"/>
+        <activity android:name=".ui.OrderConfirmationActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

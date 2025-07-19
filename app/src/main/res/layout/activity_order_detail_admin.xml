@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_order_id"
+        android:text="Mã đơn: #123"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_customer_name"
+        android:text="Khách: Nguyễn Văn A"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:text="SĐT: 0987654321"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_total"
+        android:text="Tổng: 1.000.000₫"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:text="Trạng thái: Đang xử lý"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>
+
